@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MV | EMBR</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gw-yellow:#FBB52B;--gw-orange:#F07A1A;--bg-dark:#1a1b1e;--bg-panel:#25262b;--bg-card:#2c2d33;--bg-input:#33343a;--border:#3a3b42;--text-primary:#e8e6e1;--text-secondary:#9a9890;--text-muted:#6b6960}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Exo 2',system-ui,sans-serif;background:var(--bg-dark);color:var(--text-primary)}
+.header{background:var(--bg-panel);border-bottom:1px solid var(--border);padding:16px 0}
+.header-inner{max-width:960px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
+.header-left{display:flex;align-items:center;gap:16px}
+.logo-img{height:40px;object-fit:contain}
+.header-divider{width:1px;height:32px;background:var(--border)}
+.header-title{font-size:14px;font-weight:600;color:var(--text-secondary)}
+.header-version{font-size:11px;color:var(--text-muted)}
+.wrap{max-width:960px;margin:0 auto;padding:20px}
+.sys-tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--bg-panel);padding:4px;border-radius:10px;border:1px solid var(--border)}
+.sys-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;color:var(--text-muted);background:transparent;border:none;border-radius:8px;cursor:pointer;font-family:'Exo 2',system-ui,sans-serif}
+.sys-tab:hover{color:var(--text-secondary);background:var(--bg-card)}
+.sys-tab.active{color:#1C1B1A;background:var(--gw-yellow)}
+.sys-tab .tab-sub{font-size:10px;font-weight:400;opacity:0.7;display:block;margin-top:2px}
+.project-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px}
+.project-field{display:flex;flex-direction:column;gap:3px}
+.project-field label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+.project-field input{background:var(--bg-input);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;color:var(--text-primary);font-family:'Exo 2',system-ui,sans-serif}
+.project-field input:focus{outline:none;border-color:var(--gw-yellow);box-shadow:0 0 0 2px rgba(251,181,43,.2)}
+.project-field input::placeholder{color:var(--text-muted)}
+.xsection{margin-bottom:20px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.xsection svg{display:block;width:100%}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.panel{background:var(--bg-panel);border-radius:10px;padding:18px;border:1px solid var(--border)}
+.panel-title{font-size:11px;font-weight:700;color:var(--gw-yellow);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.panel-title::before{content:'';display:block;width:3px;height:14px;background:var(--gw-yellow);border-radius:2px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;color:var(--text-secondary);margin-bottom:4px}
+.field-row{display:flex;align-items:center;gap:8px}
+.field input,.field select{width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;font-size:14px;color:var(--text-primary);font-family:'Exo 2',system-ui,sans-serif}
+.field select{appearance:auto;cursor:pointer}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gw-yellow);box-shadow:0 0 0 2px rgba(251,181,43,.2)}
+.field .unit{font-size:12px;color:var(--text-muted);white-space:nowrap;min-width:50px}
+input.nospin::-webkit-inner-spin-button,input.nospin::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input.nospin{-moz-appearance:textfield;appearance:textfield}
+.soil-input{position:relative;flex:1;display:flex;align-items:center}
+.soil-input input{width:100%;padding-right:30px}
+.soil-arrow{position:absolute;right:1px;top:1px;bottom:1px;width:28px;border:none;background:transparent;color:var(--text-muted);cursor:pointer;font-size:9px;line-height:1;display:flex;align-items:center;justify-content:center}
+.soil-arrow:hover{color:var(--gw-yellow)}
+.soil-menu{position:absolute;top:calc(100% + 3px);left:0;right:0;z-index:60;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;box-shadow:0 6px 16px rgba(0,0,0,.45);display:none;overflow:hidden}
+.soil-menu.open{display:block}
+.soil-menu button{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;padding:8px 12px;background:transparent;border:none;color:var(--text-primary);font-size:13px;cursor:pointer;font-family:'Exo 2',system-ui,sans-serif}
+.soil-menu button:hover{background:var(--bg-input)}
+.soil-menu .soil-val{color:var(--text-muted);font-size:11px}
+.field-check{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.field-check input[type=checkbox]{width:18px;height:18px;accent-color:var(--gw-yellow)}
+.field-check label{font-size:12px;color:var(--text-secondary)}
+.fixed-box{margin-top:14px;padding:12px;background:var(--bg-card);border-radius:8px;font-size:11px;color:var(--text-muted);line-height:1.7;border:1px solid var(--border)}
+.fixed-box strong{color:var(--text-secondary)}
+.hidden{display:none}
+.results{background:var(--bg-panel);border-radius:10px;padding:24px;border:1px solid var(--border);position:relative;overflow:hidden}
+.results::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gw-yellow),var(--gw-orange))}
+.results-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.amp-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
+.amp-value{font-size:56px;font-weight:700;color:var(--gw-yellow);line-height:1}
+.amp-value .unit{font-size:22px;color:var(--text-muted);font-weight:400}
+.amp-sub{font-size:13px;color:var(--text-muted);margin-top:6px}
+.results-info{text-align:right;font-size:13px;color:var(--text-secondary);line-height:1.6}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.detail-card{background:var(--bg-card);border-radius:8px;padding:10px 14px;border:1px solid var(--border)}
+.detail-card .dl{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+.detail-card .dv{font-size:15px;font-weight:600;color:var(--text-primary);margin-top:2px}
+.btn{padding:9px 20px;font-size:13px;font-weight:600;border:none;border-radius:6px;cursor:pointer;font-family:'Exo 2',system-ui,sans-serif;transition:.15s}
+.btn-accent{background:var(--gw-yellow);color:#1C1B1A}.btn-accent:hover{background:var(--gw-orange)}
+.btn-outline{background:transparent;color:var(--gw-yellow);border:1px solid var(--gw-yellow)}.btn-outline:hover{background:rgba(251,181,43,.15)}
+.btn-green{background:#2d6a30;color:#fff}.btn-green:hover{background:#358438}
+.btn-red{background:#6a2222;color:#fff;font-size:11px;padding:5px 10px}.btn-red:hover{background:#8a3333}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.config-panel{background:var(--bg-panel);border-radius:10px;padding:18px;margin-bottom:20px;border:1px solid var(--border)}
+.config-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.config-bar input[type="text"]{flex:1;min-width:180px;padding:8px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text-primary);font-family:'Exo 2',system-ui,sans-serif}
+.config-bar input[type="text"]:focus{outline:none;border-color:var(--gw-yellow);box-shadow:0 0 0 2px rgba(251,181,43,.2)}
+.config-bar input[type="text"]::placeholder{color:var(--text-muted)}
+.panel-title-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.panel-title-row .panel-title{margin-bottom:0}
+.export-panel{background:var(--bg-panel);border-radius:10px;padding:18px;margin-top:16px;border:1px solid var(--border)}
+.export-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.export-title{font-size:14px;font-weight:600;color:var(--text-secondary)}
+.export-pre{background:var(--bg-dark);color:var(--text-secondary);padding:16px;border-radius:8px;font-size:11px;line-height:1.6;overflow:auto;max-height:400px;white-space:pre-wrap;font-family:'Courier New',monospace;border:1px solid var(--border)}
+.error-box{margin-top:10px;padding:12px;background:#3a1515;border:1px solid #6a2222;border-radius:8px;font-size:12px;color:#f5aaaa}
+.notice{margin-top:16px;padding:14px 18px;background:var(--bg-panel);border-radius:10px;font-size:11px;color:var(--text-muted);border:1px solid var(--border);line-height:1.7}
+.notice strong{color:var(--gw-yellow)}
+@media(max-width:700px){.cols{grid-template-columns:1fr}.detail-grid{grid-template-columns:repeat(2,1fr)}.project-bar{grid-template-columns:1fr}.sys-tabs{flex-direction:column}}
+.ver-badge{font-size:11px;font-weight:700;color:#1C1B1A;background:var(--gw-yellow);padding:3px 10px;border-radius:4px;letter-spacing:1px}
+.nav{background:var(--bg-panel);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:960px;margin:0 auto;padding:0 20px;display:flex;gap:2px;flex-wrap:wrap}
+.nav-btn{padding:13px 18px;font-size:13px;font-weight:600;color:var(--text-muted);background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:'Exo 2',system-ui,sans-serif}
+.nav-btn:hover{color:var(--text-secondary)}
+.nav-btn.active{color:var(--gw-yellow);border-bottom-color:var(--gw-yellow)}
+.home-hero{text-align:center;padding:44px 20px 4px}
+.home-hero h1{font-size:42px;font-weight:700;color:var(--gw-yellow);margin-bottom:6px}
+.home-hero .sub{font-size:17px;color:var(--text-secondary);margin-bottom:6px}
+.home-hero .meta{font-size:12px;color:var(--text-muted);letter-spacing:.4px}
+.badge-row{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.vbadge{font-size:11px;color:var(--text-secondary);background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:6px 14px}
+.vbadge strong{color:var(--gw-yellow)}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
+.mod-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:12px;padding:22px;cursor:pointer;transition:.15s;text-align:left}
+.mod-card:hover{border-color:var(--gw-yellow);transform:translateY(-2px)}
+.mod-card h3{font-size:17px;color:var(--text-primary);margin-bottom:8px}
+.mod-card p{font-size:13px;color:var(--text-muted);line-height:1.6}
+.mod-card .arrow{color:var(--gw-yellow);font-size:13px;font-weight:600;margin-top:12px;display:inline-block}
+.content{background:var(--bg-panel);border:1px solid var(--border);border-radius:12px;padding:28px;margin-top:20px}
+.content h2{font-size:22px;color:var(--gw-yellow);margin:4px 0 12px}
+.content h3{font-size:16px;color:var(--text-primary);margin:22px 0 8px}
+.content p{font-size:14px;color:var(--text-secondary);line-height:1.75;margin-bottom:12px}
+.content ul{margin:0 0 12px 20px}
+.content li{font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:5px}
+.doc-links{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0}
+.doc-link{display:flex;align-items:center;gap:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;color:var(--text-primary);text-decoration:none;font-size:13px;font-weight:600}
+.doc-link:hover{border-color:var(--gw-yellow)}
+.doc-link .ic{font-size:20px}
+.doc-link .dl-sub{display:block;font-size:11px;color:var(--text-muted);font-weight:400}
+.release{border-left:3px solid var(--gw-yellow);padding:2px 0 2px 18px;margin-bottom:24px}
+.release h3{font-size:18px;color:var(--text-primary);margin:0 0 2px}
+.release .date{font-size:12px;color:var(--text-muted);margin-bottom:10px}
+@media(max-width:700px){.card-grid{grid-template-columns:1fr}}
+/* Home-page screenshot carousel */
+.home-shots{margin-top:38px}
+.home-shots h4{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);text-align:center;margin:0 0 16px}
+.carousel{position:relative;max-width:880px;margin:0 auto;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,.4)}
+.carousel-viewport{position:relative;width:100%;aspect-ratio:16/10;background:var(--bg-dark)}
+.carousel-slide{position:absolute;inset:0;opacity:0;transition:opacity .5s ease;pointer-events:none}
+.carousel-slide.active{opacity:1;pointer-events:auto}
+.carousel-slide img{width:100%;height:100%;object-fit:contain;display:block}
+.carousel-cap{position:absolute;left:0;right:0;bottom:0;padding:26px 18px 14px;font-size:13px;color:var(--text-primary);background:linear-gradient(transparent,rgba(0,0,0,.8));text-align:left}
+.carousel-nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:rgba(26,27,30,.72);color:var(--text-primary);font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;z-index:2}
+.carousel-nav:hover{border-color:var(--gw-yellow);color:var(--gw-yellow)}
+.carousel-nav:focus-visible{outline:2px solid var(--gw-yellow);outline-offset:2px}
+.carousel-nav.prev{left:12px}.carousel-nav.next{right:12px}
+.carousel-dots{display:flex;justify-content:center;gap:8px;padding:12px 0}
+.carousel-dots button{width:8px;height:8px;padding:0;border-radius:50%;border:none;background:var(--border);cursor:pointer;transition:.15s}
+.carousel-dots button:hover{background:var(--text-secondary)}
+.carousel-dots button.active{background:var(--gw-yellow);width:22px;border-radius:4px}
+@media(max-width:700px){.carousel{max-width:100%}.carousel-nav{width:34px;height:34px;font-size:18px}}
+</style>
+</head>
+<body>
+<div class="header"><div class="header-inner"><div class="header-left">
+<img src="/gridworks_logo.png" alt="Gridworks" class="logo-img">
+<div class="header-divider"></div>
+<div><div class="header-title">EMBR</div><div class="header-version">Engineered Model for Buried-cable Ratings · v1.2 · IEC 60287 / Neher-McGrath</div></div>
+</div><div class="ver-badge">v1.2</div></div></div>
+<div class="nav"><div class="nav-inner">
+<button class="nav-btn active" id="nav-home" onclick="showModule('home')">Home</button>
+<button class="nav-btn" id="nav-calculator" onclick="showModule('calculator')">Calculator</button>
+<button class="nav-btn" id="nav-about" onclick="showModule('about')">About</button>
+<button class="nav-btn" id="nav-releasenotes" onclick="showModule('releasenotes')">Release Notes</button>
+</div></div>
+<div class="wrap module" id="mod-calculator" style="display:none">
+<div class="sys-tabs">
+<button class="sys-tab active" onclick="setSystem('mv')" id="tab-mv">MV Trefoil<span class="tab-sub">15–35 kV TR-XLPE</span></button>
+<button class="sys-tab" onclick="setSystem('dc')" id="tab-dc">DC<span class="tab-sub">Solar / Battery</span></button>
+<button class="sys-tab" onclick="setSystem('lvac')" id="tab-lvac">LVAC<span class="tab-sub">Power Feeders</span></button>
+</div>
+<div class="project-bar">
+<div class="project-field"><label>Project Number</label><input type="text" id="projectNumber" placeholder="e.g. GW-2026-001"></div>
+<div class="project-field"><label>Project Name</label><input type="text" id="projectName" placeholder="e.g. Solar Farm Interconnect"></div>
+<div class="project-field"><label>Engineer</label><input type="text" id="engineerName" placeholder="e.g. J. Smith, PE"></div>
+</div>
+
+<!-- CONFIGURATION PANEL -->
+<div class="config-panel">
+<div class="panel-title-row">
+<div class="panel-title">Configurations</div>
+</div>
+<div class="config-bar">
+<input type="text" id="configName" placeholder="Configuration name (e.g. Sunbelt BESS - 500AL Direct Burial)">
+<button class="btn btn-accent" onclick="saveConfigFile()" style="white-space:nowrap">Save .json</button>
+<button class="btn btn-outline" onclick="$('configFileInput').click()" style="white-space:nowrap">Open .json</button>
+<input type="file" id="configFileInput" accept=".json" style="display:none" onchange="openConfigFile(event)">
+</div>
+<div id="configStatus" style="margin-top:8px;font-size:11px;color:var(--text-muted);display:none"></div>
+</div>
+<div class="xsection" id="xsection"></div>
+
+<!-- MV PANEL -->
+<div id="panel-mv">
+<div class="cols"><div class="panel"><div class="panel-title">Cable & Installation</div>
+<div class="field"><label>Cable Size</label><select id="mv_cableSize" onchange="mvCableChanged()">
+<optgroup label="15 kV — 175 mil, 1/3 CN">
+<option value="15kv_4/0">15 kV — 4/0 AWG AL</option><option value="15kv_250">15 kV — 250 kcmil AL</option><option value="15kv_350">15 kV — 350 kcmil AL</option><option value="15kv_500">15 kV — 500 kcmil AL</option><option value="15kv_750">15 kV — 750 kcmil AL</option><option value="15kv_1000">15 kV — 1000 kcmil AL</option>
+</optgroup>
+<optgroup label="25 kV — 260 mil, 1/3 CN">
+<option value="25kv_4/0">25 kV — 4/0 AWG AL</option><option value="25kv_250">25 kV — 250 kcmil AL</option><option value="25kv_350">25 kV — 350 kcmil AL</option><option value="25kv_500">25 kV — 500 kcmil AL</option><option value="25kv_750">25 kV — 750 kcmil AL</option><option value="25kv_1000">25 kV — 1000 kcmil AL</option>
+</optgroup>
+<optgroup label="35 kV — 345 mil">
+<option value="4/0">35 kV — 4/0 AWG AL (1/2 CN)</option><option value="500" selected>35 kV — 500 kcmil AL (1/3 CN)</option><option value="750">35 kV — 750 kcmil AL (1/3 CN)</option><option value="1000">35 kV — 1000 kcmil AL (1/6 CN)</option><option value="1250">35 kV — 1250 kcmil AL (1/6 CN)</option><option value="1500">35 kV — 1500 kcmil AL (1/6 CN)</option>
+</optgroup>
+</select></div>
+<div class="field"><label>Operating Voltage</label><div class="field-row"><input type="number" id="mv_voltage" list="mvVoltPresets" value="34.5" step="0.1" min="0.1" max="46"><span class="unit">kV L-L</span></div>
+<datalist id="mvVoltPresets"><option value="11.47"></option><option value="13.8"></option><option value="24"></option><option value="34.5"></option></datalist></div>
+<div class="field"><label>Installation Type</label><select id="mv_installType"><option value="direct">Direct Burial</option><option value="conduit">In Conduit</option></select></div>
+<div id="mv_conduitFields" class="hidden">
+<div class="field"><label>Conduit Type</label><select id="mv_conduitType"><option value="pvc40">PVC Schedule 40</option><option value="hdpe">HDPE</option></select></div>
+<div class="field"><label>Conduit Size</label><select id="mv_conduitSize"></select></div></div>
+<div class="field"><label>Burial Depth</label><div class="field-row"><input type="number" id="mv_burialDepth" value="36" min="12" max="120"><span class="unit">inches</span></div></div>
+<div class="field"><label>Number of Parallel Circuits</label><input type="number" id="mv_numCircuits" value="1" min="1" max="12"></div>
+<div id="mv_spacingField" class="field hidden"><label>Circuit Spacing (center-to-center)</label><div class="field-row"><input type="number" id="mv_circuitSpacing" value="48" min="6" max="120"><span class="unit">inches</span></div></div>
+</div><div class="panel"><div class="panel-title">Soil & Operating Conditions</div>
+<div class="field"><label>Native Soil Temperature</label><div class="field-row"><input type="number" id="mv_soilTemp" value="25" min="0" max="50"><span class="unit">°C</span><button class="btn btn-outline" style="padding:4px 8px;font-size:11px;margin-left:4px" onclick="openSoilLookup('mv_soilTemp')" title="Look up soil temperature by location">Lookup</button></div></div>
+<div class="field"><label>Native Soil ρ</label><div class="field-row"><div class="soil-input"><input type="number" class="nospin" id="mv_soilRhoNative" onchange="syncSoil('mv','native')" value="150" step="5" min="30" max="300"><button type="button" class="soil-arrow" onclick="toggleSoilMenu('mv_soilRhoNative')">▼</button><div class="soil-menu" id="mv_soilRhoNative_menu"></div></div><span class="unit">°C·cm/W</span></div></div>
+<div class="field-check"><input type="checkbox" id="mv_useDryout" checked><label for="mv_useDryout">Apply dry-out zone</label></div>
+<div id="mv_dryoutField"><div class="field"><label>Dry-Out Zone ρ</label><div class="field-row"><div class="soil-input"><input type="number" class="nospin" id="mv_soilRhoDry" onchange="syncSoil('mv','dry')" value="250" step="5" min="50" max="500"><button type="button" class="soil-arrow" onclick="toggleSoilMenu('mv_soilRhoDry')">▼</button><div class="soil-menu" id="mv_soilRhoDry_menu"></div></div><span class="unit">°C·cm/W</span></div></div></div>
+<div class="field"><label>Load Factor</label><input type="number" id="mv_loadFactor" value="1.0" step="0.05" min="0.1" max="1.0"></div>
+<div class="fixed-box"><strong>Fixed:</strong> 2'×2' dry-out box · Max 90°C · 34.5 kV · 60 Hz · 5% buffer<br>Cable: Priority Wire #4070-17<br>Soil temp lookup: <a href="https://open-meteo.com/" target="_blank" style="color:var(--gw-yellow)">Open-Meteo</a> Historical Archive API</div>
+</div></div></div>
+
+<!-- DC PANEL -->
+<div id="panel-dc" class="hidden">
+<div class="cols"><div class="panel"><div class="panel-title">Cable & Installation</div>
+<div class="field"><label>Conductor Material</label><select id="dc_material"><option value="cu">Copper</option><option value="al">Aluminum</option></select></div>
+<div class="field"><label>Conductor Size</label><select id="dc_cableSize">
+<option value="4/0">4/0 AWG</option><option value="250">250 kcmil</option><option value="300">300 kcmil</option><option value="350">350 kcmil</option><option value="400">400 kcmil</option><option value="500" selected>500 kcmil</option><option value="600">600 kcmil</option><option value="750">750 kcmil</option><option value="1000">1000 kcmil</option>
+</select></div>
+<div class="field"><label>Insulation Type</label><select id="dc_insulation"><option value="thwn">THWN/THHN 600V (75°C)</option><option value="xhhw" selected>XHHW-2 600V (90°C)</option><option value="use2">USE-2/RHW-2 600V (90°C)</option><option value="pv2kv">PV Wire 2kV XLPE (90°C)</option></select></div>
+<div class="field"><label>Installation Type</label><select id="dc_installType"><option value="conduit" selected>In Conduit</option><option value="direct">Direct Burial</option></select></div>
+<div id="dc_conduitFields">
+<div class="field"><label>Conduit Type</label><select id="dc_conduitType"><option value="pvc40">PVC Schedule 40</option><option value="hdpe">HDPE</option></select></div>
+<div class="field"><label>Conduit Size</label><select id="dc_conduitSize"></select></div></div>
+<div id="dc_condsPerConduitField" class="field"><label id="dc_condsPerConduitLabel">Circuits Per Conduit</label><select id="dc_condsPerConduit"><option value="1" selected>1 circuit (2 cables)</option><option value="2">2 circuits (4 cables)</option><option value="3">3 circuits (6 cables)</option></select></div>
+<div class="field"><label>Burial Depth</label><div class="field-row"><input type="number" id="dc_burialDepth" value="36" min="12" max="120"><span class="unit">inches</span></div></div>
+<div class="field"><label id="dc_numCircuitsLabel">Number of Parallel Conduits</label><input type="number" id="dc_numCircuits" value="1" min="1" max="12"></div>
+<div id="dc_spacingField" class="field hidden"><label id="dc_spacingLabel">Conduit Spacing (center-to-center)</label><div class="field-row"><input type="number" id="dc_circuitSpacing" value="48" min="6" max="120"><span class="unit">inches</span></div></div>
+</div><div class="panel"><div class="panel-title">Soil & Operating Conditions</div>
+<div class="field"><label>Native Soil Temperature</label><div class="field-row"><input type="number" id="dc_soilTemp" value="25" min="0" max="50"><span class="unit">°C</span><button class="btn btn-outline" style="padding:4px 8px;font-size:11px;margin-left:4px" onclick="openSoilLookup('dc_soilTemp')" title="Look up soil temperature by location">Lookup</button></div></div>
+<div class="field"><label>Native Soil ρ</label><div class="field-row"><div class="soil-input"><input type="number" class="nospin" id="dc_soilRhoNative" onchange="syncSoil('dc','native')" value="150" step="5" min="30" max="300"><button type="button" class="soil-arrow" onclick="toggleSoilMenu('dc_soilRhoNative')">▼</button><div class="soil-menu" id="dc_soilRhoNative_menu"></div></div><span class="unit">°C·cm/W</span></div></div>
+<div class="field-check"><input type="checkbox" id="dc_useDryout"><label for="dc_useDryout">Apply dry-out zone</label></div>
+<div id="dc_dryoutField" class="field hidden"><label>Dry-Out Zone ρ</label><div class="field-row"><div class="soil-input"><input type="number" class="nospin" id="dc_soilRhoDry" onchange="syncSoil('dc','dry')" value="250" step="5" min="50" max="500"><button type="button" class="soil-arrow" onclick="toggleSoilMenu('dc_soilRhoDry')">▼</button><div class="soil-menu" id="dc_soilRhoDry_menu"></div></div><span class="unit">°C·cm/W</span></div></div>
+<div class="field"><label>Load Factor</label><input type="number" id="dc_loadFactor" value="1.0" step="0.05" min="0.1" max="1.0"></div>
+<div class="fixed-box"><strong>DC:</strong> No skin/proximity · No dielectric/shield loss · 5% buffer<br>600V: NEC Ch 9 dims · 2kV: Priority Wire PV datasheet<br>Soil temp lookup: <a href="https://open-meteo.com/" target="_blank" style="color:var(--gw-yellow)">Open-Meteo</a> Historical Archive API</div>
+</div></div></div>
+
+<!-- LVAC PANEL -->
+<div id="panel-lvac" class="hidden">
+<div class="cols"><div class="panel"><div class="panel-title">Cable & Installation</div>
+<div class="field"><label>Conductor Material</label><select id="lv_material"><option value="cu">Copper</option><option value="al">Aluminum</option></select></div>
+<div class="field"><label>Conductor Size</label><select id="lv_cableSize">
+<option value="4/0">4/0 AWG</option><option value="250">250 kcmil</option><option value="300">300 kcmil</option><option value="350">350 kcmil</option><option value="400">400 kcmil</option><option value="500" selected>500 kcmil</option><option value="600">600 kcmil</option><option value="750">750 kcmil</option><option value="1000">1000 kcmil</option>
+</select></div>
+<div class="field"><label>Insulation Type</label><select id="lv_insulation"><option value="thwn">THWN/THHN 600V (75°C)</option><option value="xhhw" selected>XHHW-2 600V (90°C)</option><option value="use2">USE-2/RHW-2 600V (90°C)</option><option value="pv2kv">PV Wire 2kV XLPE (90°C)</option></select></div>
+<div class="field"><label>Phase Configuration</label><select id="lv_phaseConfig"><option value="single_phase">Single Phase (2 cables)</option><option value="split_phase">Split Phase (3 cables)</option><option value="three_phase_delta" selected>3Φ Delta (3 cables)</option><option value="three_phase_wye">3Φ Wye (4 cables)</option></select></div>
+<div id="lv_neutralField" class="field hidden"><label>Neutral Loading Factor</label><div class="field-row"><input type="number" id="lv_neutralFactor" value="0" step="0.1" min="0" max="1.0"><span class="unit">0=balanced</span></div></div>
+<div class="field"><label>Installation Type</label><select id="lv_installType"><option value="conduit" selected>In Conduit</option><option value="direct">Direct Burial</option></select></div>
+<div id="lv_conduitFields">
+<div class="field"><label>Conduit Type</label><select id="lv_conduitType"><option value="pvc40">PVC Schedule 40</option><option value="hdpe">HDPE</option></select></div>
+<div class="field"><label>Conduit Size</label><select id="lv_conduitSize"></select></div></div>
+<div class="field"><label>Burial Depth</label><div class="field-row"><input type="number" id="lv_burialDepth" value="36" min="12" max="120"><span class="unit">inches</span></div></div>
+<div class="field"><label id="lv_numCircuitsLabel">Number of Parallel Conduits</label><input type="number" id="lv_numCircuits" value="1" min="1" max="12"></div>
+<div id="lv_spacingField" class="field hidden"><label id="lv_spacingLabel">Conduit Spacing (center-to-center)</label><div class="field-row"><input type="number" id="lv_circuitSpacing" value="48" min="6" max="120"><span class="unit">inches</span></div></div>
+</div><div class="panel"><div class="panel-title">Soil & Operating Conditions</div>
+<div class="field"><label>Native Soil Temperature</label><div class="field-row"><input type="number" id="lv_soilTemp" value="25" min="0" max="50"><span class="unit">°C</span><button class="btn btn-outline" style="padding:4px 8px;font-size:11px;margin-left:4px" onclick="openSoilLookup('lv_soilTemp')" title="Look up soil temperature by location">Lookup</button></div></div>
+<div class="field"><label>Native Soil ρ</label><div class="field-row"><div class="soil-input"><input type="number" class="nospin" id="lv_soilRhoNative" onchange="syncSoil('lv','native')" value="150" step="5" min="30" max="300"><button type="button" class="soil-arrow" onclick="toggleSoilMenu('lv_soilRhoNative')">▼</button><div class="soil-menu" id="lv_soilRhoNative_menu"></div></div><span class="unit">°C·cm/W</span></div></div>
+<div class="field-check"><input type="checkbox" id="lv_useDryout"><label for="lv_useDryout">Apply dry-out zone</label></div>
+<div id="lv_dryoutField" class="field hidden"><label>Dry-Out Zone ρ</label><div class="field-row"><div class="soil-input"><input type="number" class="nospin" id="lv_soilRhoDry" onchange="syncSoil('lv','dry')" value="250" step="5" min="50" max="500"><button type="button" class="soil-arrow" onclick="toggleSoilMenu('lv_soilRhoDry')">▼</button><div class="soil-menu" id="lv_soilRhoDry_menu"></div></div><span class="unit">°C·cm/W</span></div></div>
+<div class="field"><label>Load Factor</label><input type="number" id="lv_loadFactor" value="1.0" step="0.05" min="0.1" max="1.0"></div>
+<div class="fixed-box"><strong>LVAC:</strong> 60 Hz · Skin & proximity included · No dielectric/shield loss<br>5% buffer · NEC Chapter 9 dimensions<br>Soil temp lookup: <a href="https://open-meteo.com/" target="_blank" style="color:var(--gw-yellow)">Open-Meteo</a> Historical Archive API</div>
+</div></div></div>
+
+<!-- RESULTS -->
+<div class="results">
+<div class="results-top"><div>
+<div class="amp-label">Maximum Ampacity (5% buffer)</div>
+<div class="amp-value"><span id="rAmp">—</span> <span class="unit">A</span></div>
+<div class="amp-sub">Unbuffered: <span id="rAmpRaw">—</span> A · Conductor: <span id="rTemp">—</span>°C</div>
+</div><div class="results-info" id="rInfo"></div></div>
+<div class="detail-grid" id="detailGrid"></div>
+<div class="btn-row"><button class="btn btn-green" onclick="exportPDF()">Download PDF</button></div>
+</div>
+<div id="errorBox" class="error-box hidden"></div>
+
+<!-- SOIL TEMP LOOKUP MODAL -->
+<div id="soilLookupOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center" onclick="if(event.target===this)closeSoilLookup()">
+<div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:12px;padding:24px;width:420px;max-width:90vw;position:relative">
+<div style="font-size:14px;font-weight:600;color:var(--gw-yellow);margin-bottom:16px">Soil Temperature Lookup</div>
+<div class="field"><label>Location (city name or lat, lon)</label>
+<div class="field-row"><input type="text" id="soilLookupInput" placeholder="e.g. Phoenix, AZ or 33.45, -112.07" style="flex:1;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text-primary);font-family:'Exo 2',system-ui,sans-serif" onkeydown="if(event.key==='Enter')soilLookupSearch()">
+<button class="btn btn-accent" onclick="soilLookupSearch()" style="white-space:nowrap">Search</button></div></div>
+<div id="soilLookupStatus" style="margin-top:12px;font-size:12px;color:var(--text-muted);min-height:20px"></div>
+<div id="soilLookupResult" class="hidden" style="margin-top:12px;padding:14px;background:var(--bg-card);border-radius:8px;border:1px solid var(--border)">
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+<span id="soilLookupLocation" style="font-size:13px;color:var(--text-secondary)"></span>
+<span id="soilLookupCoords" style="font-size:10px;color:var(--text-muted)"></span></div>
+<div style="font-size:28px;font-weight:700;color:var(--gw-yellow);margin-bottom:4px"><span id="soilLookupTemp">—</span><span style="font-size:14px;color:var(--text-muted);font-weight:400"> °C</span></div>
+<div style="font-size:11px;color:var(--text-muted);margin-bottom:12px">Peak daily soil temperature at 28–100 cm depth over last 5 years (Open-Meteo)</div>
+<div class="btn-row">
+<button class="btn btn-accent" onclick="applySoilTemp()">Apply to Field</button>
+<button class="btn btn-outline" onclick="closeSoilLookup()">Cancel</button></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="wrap module" id="mod-home">
+<div class="home-hero">
+<h1>Gridworks EMBR</h1>
+<div class="sub">Engineered Model for Buried-cable Ratings</div>
+<div class="meta">v1.2 · IEC 60287 / Neher–McGrath ampacity for underground power cables</div>
+<div class="badge-row">
+<span class="vbadge">Validated vs <strong>Cymcap 8.1</strong></span>
+<span class="vbadge">Verified vs <strong>CIGRE TB 880</strong></span>
+<span class="vbadge"><strong>Zero-config</strong> browser tool</span>
+</div>
+</div>
+<div class="card-grid">
+<div class="mod-card" onclick="showModule('calculator')"><h3>Calculator</h3><p>Size underground MV, DC and LVAC cables by IEC 60287 / Neher–McGrath. Live cross-section, IEEE 442 soil presets, and one-page PDF study reports.</p><span class="arrow">Open calculator →</span></div>
+<div class="mod-card" onclick="showModule('about')"><h3>About</h3><p>What EMBR is, the three calculation engines, the methodology, and the Cymcap and CIGRE TB 880 validation documents.</p><span class="arrow">Learn more →</span></div>
+<div class="mod-card" onclick="showModule('releasenotes')"><h3>Release Notes</h3><p>Version history and what changed in each release, from the initial beta through the latest release.</p><span class="arrow">View history →</span></div>
+</div>
+<div class="home-shots" id="homeShots" style="display:none">
+<h4>EMBR in action</h4>
+<div class="carousel" id="homeCarousel" role="group" aria-roledescription="carousel" aria-label="Screenshots of EMBR cross-sections">
+<div class="carousel-viewport" id="carouselViewport"></div>
+<button type="button" class="carousel-nav prev" id="carPrev" aria-label="Previous slide" onclick="carMove(-1)">&#8249;</button>
+<button type="button" class="carousel-nav next" id="carNext" aria-label="Next slide" onclick="carMove(1)">&#8250;</button>
+<div class="carousel-dots" id="carouselDots" aria-label="Choose slide"></div>
+</div>
+</div>
+</div>
+
+<div class="wrap module" id="mod-about">
+<div class="content">
+<h2>About EMBR</h2>
+<p>EMBR (Engineered Model for Buried-cable Ratings) is an in-house ampacity calculator for underground power cables. It implements the IEC 60287 / Neher–McGrath thermal-circuit methodology in a lightweight, zero-configuration browser tool, with three calculation engines covering the cable systems Gridworks designs most often.</p>
+<h3>Calculation engines</h3>
+<ul>
+<li><strong>MV Trefoil (15 / 25 / 35 kV)</strong> — 15, 25, and 35 kV TR-XLPE aluminium cables in touching trefoil, direct-buried or in conduit, at a user-selectable operating voltage. Full IEC 60287 loss model: skin and proximity effects, concentric-neutral shield loss, dielectric loss, and a two-zone dry-out external thermal resistance.</li>
+<li><strong>DC</strong> — solar and battery circuits, single conductors in conduit or direct burial, with a per-cable eccentric air-gap model for cables in conduit.</li>
+<li><strong>LVAC</strong> — low-voltage AC feeders with configurable phase topology (single-phase, split-phase, three-phase delta or wye).</li>
+</ul>
+<h3>Validation</h3>
+<p>EMBR is validated against two independent references: Cymcap 8.1 Rev 2 (a 62-scenario matrix; 58 of 58 valid scenarios within ±5%) and CIGRE Technical Brochure 880 (2022), the industry reference for verifying cable-rating tools. Against TB 880, EMBR's IEC 60287 engine reproduces the published reference values to their full precision, including the complete Case 4 (33 kV) current rating.</p>
+<p style="font-size:12px;color:var(--text-muted)">The Cymcap matrix was run at 35 kV. TB 880 contains no 15 kV or 25 kV single-core case, so the new libraries (Southwire SPEC 81102 / 81142) are instead cross-checked by an independent IEC 60287 recomputation that reproduces their full rating chain — R_ac, dielectric loss, T1/T3/T4, shield loss, and ampacity — term-by-term, run automatically in CI. Absolute validation against Cymcap at 15 kV / 25 kV is still pending, so treat those results as engineering estimates until that cross-check is complete.</p>
+<div class="doc-links">
+<a class="doc-link" href="/docs/EMBR_TB880_Verification_Report.pdf" target="_blank"><span class="ic">📄</span><span>CIGRE TB 880 Verification Report<span class="dl-sub">PDF · EMBR vs TB 880 Cases 1 &amp; 4</span></span></a>
+<a class="doc-link" href="/docs/EMBR_Cymcap_Validation_Report.pdf" target="_blank"><span class="ic">📄</span><span>Cymcap 8.1 Validation Report<span class="dl-sub">PDF · 58/58 scenarios within ±5%</span></span></a>
+</div>
+<p style="font-size:12px;color:var(--text-muted)">Methodology: IEC 60287-1-1 and IEC 60287-2-1; Neher–McGrath (1957). CIGRE TB 880 is CIGRE copyright; EMBR's verification uses only the published numeric reference values.</p>
+</div>
+</div>
+
+<div class="wrap module" id="mod-releasenotes">
+<div class="content">
+<h2>Release Notes</h2>
+<div class="release"><h3>v1.2</h3><div class="date">July 2026</div>
+<ul>
+<li>Added 15 kV and 25 kV cable libraries (Southwire 100% IL TR-XLPE, 1/3 concentric neutral) alongside the existing 35 kV set; the cable list now calls out each voltage class.</li>
+<li>Operating (line-to-line) voltage is now a selectable input and drives dielectric loss; it auto-fills to the cable class nominal and offers common presets.</li>
+<li>Input validation blocks selecting a cable whose insulation class is below the operating voltage.</li>
+<li>15 kV / 25 kV ratings are verified by an independent IEC 60287 cross-check that reproduces the full rating chain term-by-term (run in CI).</li>
+<li>35 kV ratings are unchanged; absolute validation of 15 kV / 25 kV against Cymcap is still pending.</li>
+</ul>
+</div>
+<div class="release"><h3>v1.1 — Patch</h3><div class="date">July 2026</div>
+<ul>
+<li>Patched input verification bugs — out-of-range and malformed inputs are now rejected cleanly instead of breaking the tool.</li>
+<li>Hardened the server: concurrent request handling, same-origin access, and a restricted set of served files.</li>
+<li>Frontend robustness — results no longer flicker to stale values, and soil-temperature lookups surface real API errors.</li>
+<li>Accessibility — the soil-preset dropdowns are now fully keyboard-operable.</li>
+<li>New home-page carousel showing example cross-sections.</li>
+</ul>
+</div>
+<div class="release"><h3>v1.0 — Production release</h3><div class="date">2026</div>
+<ul>
+<li>New home page with Calculator, About, and Release Notes modules.</li>
+<li>Independent verification against CIGRE TB 880 added — in-app report on the About page and an automated regression check in CI.</li>
+<li>IEEE 442 soil-resistivity presets selectable directly on the Native Soil and Dry-Out Zone fields.</li>
+<li>First production-ready release — EMBR leaves beta.</li>
+</ul>
+</div>
+<div class="release"><h3>v0.5</h3><div class="date">June 2026</div>
+<ul>
+<li>PDF report generation rebuilt on ReportLab; the report cross-section now matches the on-screen diagram 1:1.</li>
+<li>Cross-section grade and depth view made consistent across MV, DC, and LVAC.</li>
+<li>Browser tab title reflects the selected tool.</li>
+</ul>
+</div>
+<div class="release"><h3>v0.3 — Validated release</h3><div class="date">May 2026</div>
+<ul>
+<li>58 of 58 valid scenarios validated against Cymcap 8.1 Rev 2.</li>
+<li>NEC Table 8 DC resistance corrected to a true 20 °C reference; IEC daily loss factor; concentric-neutral shield loss with ICEA helical-lay correction.</li>
+</ul>
+</div>
+<div class="release"><h3>v0.1 — Initial</h3><div class="date">March 2026</div>
+<ul><li>Initial three-engine implementation with simplified thermal models.</li></ul>
+</div>
+</div>
+</div>
+
+<script>
+var currentSystem='mv',lastResult=null;
+function $(id){return document.getElementById(id);}
+function val(id){var e=$(id);if(!e)return '';return e.type==='number'?parseFloat(e.value):e.type==='checkbox'?e.checked:e.value;}
+function csz(id){var e=$(id),v=e?parseInt(e.value,10):NaN;return isNaN(v)?3:v;} // conduit-size index; 0 ("2\"") is a valid choice, so don't use ||3
+function mvOD(){var c=MV_CABLES[val('mv_cableSize')];return c?c.od:MV_CABLES['500'].od;} // guard against a bad/blank cableSize (e.g. from a malformed config)
+function mvClassOf(k){return k.indexOf('15kv_')===0?15:k.indexOf('25kv_')===0?25:35;} // insulation voltage class (kV) from the cable key
+function mvCableChanged(){var k=val('mv_cableSize');var v=k.indexOf('15kv_')===0?13.8:k.indexOf('25kv_')===0?24:34.5;var el=$('mv_voltage');if(el)el.value=v;} // preset the operating voltage to the class nominal on cable change
+
+// IEEE 442 soil/backfill thermal resistivity presets (°C·cm/W), read from
+// Fig. 2 (thermal property characteristics of soils): dry = resistivity at 0%
+// moisture, nat = resistivity at 2% moisture by dry weight. These populate the
+// dropdown options shown directly on the Native Soil ρ (2%) and Dry-Out Zone ρ
+// (0%) fields. The fields remain free-entry, so any custom value can be typed.
+var SOIL_PRESETS={
+  crushed_stone:{label:'Crushed Stone',dry:140,nat:75},
+  natural_sand:{label:'Natural Sand',dry:250,nat:185},
+  silty_clay:{label:'Silty Clay',dry:280,nat:210}
+};
+// Build the preset dropdown menu under each Native/Dry-Out field. A full list
+// of soils is always shown (unlike a <datalist>, which filters by current
+// value); picking one fills both fields, and the field stays free-entry.
+function _soilArrow(id){var inp=$(id);if(!inp||!inp.parentNode)return null;return inp.parentNode.querySelector('.soil-arrow');}
+function _setSoilExpanded(id,v){var a=_soilArrow(id);if(a)a.setAttribute('aria-expanded',v?'true':'false');}
+function buildSoilMenus(){
+  ['mv','dc','lv'].forEach(function(pfx){
+    [['native','_soilRhoNative','nat'],['dry','_soilRhoDry','dry']].forEach(function(t){
+      var ownerId=pfx+t[1];
+      var menu=$(ownerId+'_menu');if(!menu)return;
+      var h='';
+      for(var k in SOIL_PRESETS){var p=SOIL_PRESETS[k];var v=p[t[2]];
+        h+='<button type="button" role="menuitem" tabindex="-1" onclick="pickSoil(\''+pfx+'\',\''+t[0]+'\','+v+')">'+p.label+'<span class="soil-val">'+v+' °C·cm/W</span></button>';
+      }
+      menu.innerHTML=h;
+      menu.setAttribute('role','menu');
+      // Keyboard operability: arrow keys move between presets, Escape closes
+      // and returns focus to the toggle. (review FE-4, WCAG 2.2 Operable)
+      menu.addEventListener('keydown',function(e){
+        var items=[].slice.call(menu.querySelectorAll('button'));
+        if(!items.length)return;
+        var idx=items.indexOf(document.activeElement);
+        if(e.key==='ArrowDown'){e.preventDefault();items[(idx+1)%items.length].focus();}
+        else if(e.key==='ArrowUp'){e.preventDefault();items[(idx-1+items.length)%items.length].focus();}
+        else if(e.key==='Home'){e.preventDefault();items[0].focus();}
+        else if(e.key==='End'){e.preventDefault();items[items.length-1].focus();}
+        else if(e.key==='Escape'){e.preventDefault();closeSoilMenus(ownerId);}
+      });
+      var arrow=_soilArrow(ownerId);
+      if(arrow){arrow.setAttribute('aria-haspopup','true');arrow.setAttribute('aria-expanded','false');arrow.setAttribute('aria-label','Choose a soil resistivity preset');}
+    });
+  });
+}
+function toggleSoilMenu(id){
+  var menu=$(id+'_menu');if(!menu)return;
+  var open=menu.classList.contains('open');
+  closeSoilMenus();
+  if(!open){
+    menu.classList.add('open');
+    _setSoilExpanded(id,true);
+    var first=menu.querySelector('button');if(first)first.focus();  // move focus into the menu for keyboard users
+  }
+}
+function closeSoilMenus(returnFocusId){
+  var ms=document.querySelectorAll('.soil-menu.open');
+  for(var i=0;i<ms.length;i++){
+    ms[i].classList.remove('open');
+    _setSoilExpanded(ms[i].id.replace(/_menu$/,''),false);
+  }
+  if(returnFocusId){var a=_soilArrow(returnFocusId);if(a)a.focus();}
+}
+function pickSoil(prefix,which,value){
+  var id=prefix+(which==='native'?'_soilRhoNative':'_soilRhoDry');
+  $(id).value=value;
+  syncSoil(prefix,which); // fill the paired field with the same soil
+  closeSoilMenus();
+  if($(id))$(id).focus();  // return focus to the field after choosing
+  onAnyChange();
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.soil-input'))closeSoilMenus();
+});
+// When a recognized preset value is chosen in either the Native (2%) or
+// Dry-Out (0%) field, fill the paired field with the same soil's other value.
+// A custom value that matches no preset leaves the paired field untouched.
+function syncSoil(prefix,which){
+  var natEl=$(prefix+'_soilRhoNative'),dryEl=$(prefix+'_soilRhoDry');
+  if(!natEl||!dryEl)return;
+  var v=parseFloat(which==='native'?natEl.value:dryEl.value);
+  for(var k in SOIL_PRESETS){var p=SOIL_PRESETS[k];
+    if(which==='native'&&p.nat===v){dryEl.value=p.dry;return;}
+    if(which==='dry'&&p.dry===v){natEl.value=p.nat;return;}
+  }
+}
+
+function showModule(name){
+  var mods=['home','calculator','about','releasenotes'];
+  for(var i=0;i<mods.length;i++){
+    var el=$('mod-'+mods[i]); if(el)el.style.display=(mods[i]===name)?'':'none';
+    var nb=$('nav-'+mods[i]); if(nb)nb.classList.toggle('active',mods[i]===name);
+  }
+  if(name==='calculator')document.title=({mv:'MV',dc:'DC',lvac:'LVAC'}[currentSystem]||'')+' | EMBR';
+  else document.title=({home:'EMBR',about:'About · EMBR',releasenotes:'Release Notes · EMBR'}[name])||'EMBR';
+  window.scrollTo(0,0);
+}
+
+function setSystem(sys){
+  currentSystem=sys;
+  document.title=({mv:'MV',dc:'DC',lvac:'LVAC'}[sys]||'')+' | EMBR';
+  var tabs=document.querySelectorAll('.sys-tab');
+  for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');
+  $('tab-'+sys).classList.add('active');
+  $('panel-mv').classList.toggle('hidden',sys!=='mv');
+  $('panel-dc').classList.toggle('hidden',sys!=='dc');
+  $('panel-lvac').classList.toggle('hidden',sys!=='lvac');
+  onAnyChange();
+}
+
+var MV_CABLES={"4/0":{od:44.70},"500":{od:51.31},"750":{od:56.64},"1000":{od:60.71},"1250":{od:66.29},"1500":{od:69.34},"15kv_4/0":{od:30.30},"15kv_250":{od:32.05},"15kv_350":{od:35.18},"15kv_500":{od:39.24},"15kv_750":{od:45.54},"15kv_1000":{od:50.44},"25kv_4/0":{od:35.13},"25kv_250":{od:36.88},"25kv_350":{od:39.50},"25kv_500":{od:45.09},"25kv_750":{od:49.86},"25kv_1000":{od:55.52}};
+var CONDUIT_SIZES=[{label:'2"',id_mm:52.5,od_mm:60.3},{label:'2.5"',id_mm:62.7,od_mm:73.0},{label:'3"',id_mm:77.9,od_mm:88.9},{label:'4"',id_mm:102.3,od_mm:114.3},{label:'5"',id_mm:128.2,od_mm:141.3},{label:'6"',id_mm:154.1,od_mm:168.3},{label:'8"',id_mm:202.7,od_mm:219.1}];
+var CONDUIT_TYPES={pvc40:{label:"PVC Schedule 40"},hdpe:{label:"HDPE"}};
+var DC_ODS={"4/0":{thwn:17.78,xhhw:17.27,use2:19.43},"250":{thwn:19.43,xhhw:18.90,use2:21.08},"300":{thwn:20.83,xhhw:20.32,use2:22.48},"350":{thwn:22.10,xhhw:21.59,use2:23.75},"400":{thwn:23.32,xhhw:22.78,use2:24.94},"500":{thwn:25.48,xhhw:24.94,use2:27.10},"600":{thwn:27.74,xhhw:26.92,use2:29.36},"750":{thwn:30.23,xhhw:29.46,use2:31.88},"1000":{thwn:34.04,xhhw:33.27,use2:35.69}};
+var DC_ODS_2KV_CU={"4/0":18.74,"250":20.71,"300":22.08,"350":23.35,"400":24.54,"500":26.75,"600":29.47,"750":32.21,"1000":36.12};
+var DC_ODS_2KV_AL={"4/0":17.53,"250":19.30,"300":20.57,"350":21.84,"400":22.86,"500":24.89,"600":27.43,"750":29.97,"1000":33.78};
+function getDcOD(size,ins,mat){
+  if(ins==='pv2kv')return (mat==='al'?DC_ODS_2KV_AL:DC_ODS_2KV_CU)[size]||25;
+  var entry=DC_ODS[size];
+  if(!entry)return 25;
+  return entry[ins]||entry.xhhw||25;
+}
+
+function mvTreefoilOD(od){return od*(1+2/Math.sqrt(3));}
+
+function buildConduitSelect(sel,minID,cv){
+  sel.innerHTML='';var hv=false;
+  for(var i=0;i<CONDUIT_SIZES.length;i++){
+    var c=CONDUIT_SIZES[i],too=c.id_mm<minID;
+    var o=document.createElement('option');
+    o.value=i;o.textContent=c.label+' (ID:'+c.id_mm.toFixed(0)+'mm)'+(too?' — too small':'');
+    o.disabled=too;sel.appendChild(o);
+    if(String(i)===cv&&!too)hv=true;
+  }
+  if(hv){sel.value=cv;}
+  else{for(var j=0;j<CONDUIT_SIZES.length;j++){if(CONDUIT_SIZES[j].id_mm>=minID){sel.value=j;break;}}}
+}
+
+function updateMvConduitSizes(){
+  var sel=$('mv_conduitSize'),cv=sel.value;
+  var od=mvOD();
+  var tOD=mvTreefoilOD(od);
+  var cableArea=3*Math.PI*(od/2)*(od/2);
+  var minID=Math.max(tOD*1.02, Math.sqrt(4*(cableArea/0.40)/Math.PI));
+  buildConduitSelect(sel,minID,cv);
+}
+
+function updateDcConduitSizes(){
+  var sel=$('dc_conduitSize'),cv=sel.value;
+  var cOD=getDcOD(val('dc_cableSize'),val('dc_insulation'),val('dc_material'));
+  var nCond=parseInt(val('dc_condsPerConduit'))||1;
+  var totalCables=nCond*2;
+  var fillPct=totalCables<=2?0.31:0.40;
+  var cableArea=totalCables*Math.PI*(cOD/2)*(cOD/2);
+  var minID=Math.sqrt(4*(cableArea/fillPct)/Math.PI);
+  buildConduitSelect(sel,minID,cv);
+}
+
+function updateLvConduitSizes(){
+  var sel=$('lv_conduitSize'),cv=sel.value;
+  var cOD=getDcOD(val('lv_cableSize'),val('lv_insulation'),val('lv_material'));
+  var cfg=val('lv_phaseConfig');
+  var totalCables=cfg==='single_phase'?2:cfg==='split_phase'?3:cfg==='three_phase_wye'?4:3;
+  var fillPct=totalCables<=2?0.31:0.40;
+  var cableArea=totalCables*Math.PI*(cOD/2)*(cOD/2);
+  var minID=Math.sqrt(4*(cableArea/fillPct)/Math.PI);
+  buildConduitSelect(sel,minID,cv);
+}
+
+function updateVisibility(){
+  $('mv_conduitFields').classList.toggle('hidden',val('mv_installType')!=='conduit');
+  $('mv_spacingField').classList.toggle('hidden',parseInt($('mv_numCircuits').value)<=1);
+  $('mv_dryoutField').classList.toggle('hidden',!val('mv_useDryout'));
+  var dcCond=val('dc_installType')==='conduit';
+  $('dc_conduitFields').classList.toggle('hidden',!dcCond);
+  $('dc_condsPerConduitField').classList.toggle('hidden',!dcCond);
+  $('dc_spacingField').classList.toggle('hidden',parseInt($('dc_numCircuits').value)<=1);
+  $('dc_dryoutField').classList.toggle('hidden',!val('dc_useDryout'));
+  $('dc_numCircuitsLabel').textContent=dcCond?'Number of Parallel Conduits':'Number of Parallel Groups';
+  $('dc_spacingLabel').textContent=dcCond?'Conduit Spacing (center-to-center)':'Group Spacing (center-to-center)';
+  $('dc_condsPerConduitLabel').textContent=dcCond?'Circuits Per Conduit':'Circuits Per Group';
+  var lvCond=val('lv_installType')==='conduit';
+  $('lv_conduitFields').classList.toggle('hidden',!lvCond);
+  $('lv_spacingField').classList.toggle('hidden',parseInt($('lv_numCircuits').value)<=1);
+  $('lv_dryoutField').classList.toggle('hidden',!val('lv_useDryout'));
+  $('lv_numCircuitsLabel').textContent=lvCond?'Number of Parallel Conduits':'Number of Parallel Groups';
+  $('lv_spacingLabel').textContent=lvCond?'Conduit Spacing (center-to-center)':'Group Spacing (center-to-center)';
+  var cfg=val('lv_phaseConfig');
+  $('lv_neutralField').classList.toggle('hidden',cfg!=='three_phase_wye');
+}
+
+// CROSS-SECTION
+function drawCrossSection(){
+  if(currentSystem==='mv')drawMvXS();
+  else if(currentSystem==='dc')drawDcXS();
+  else if(currentSystem==='lvac')drawLvXS();
+}
+
+function drawMvXS(){
+  var od=mvOD()/25.4;
+  var it=val('mv_installType'),csi=csz('mv_conduitSize'),ctk=val('mv_conduitType');
+  var nC=Math.max(1,Math.min(parseInt($('mv_numCircuits').value)||1,12));
+  var sp=parseFloat($('mv_circuitSpacing').value)||48,dep=parseFloat($('mv_burialDepth').value)||36;
+  var isCond=it==='conduit',co=CONDUIT_SIZES[csi];
+  drawXS({nC:nC,sp:sp,dep:dep,dryH:val('mv_useDryout')?12:0,isCond:isCond,coOD:isCond?co.od_mm/25.4:0,coID:isCond?co.id_mm/25.4:0,ctk:ctk,
+    cables:[{a:-Math.PI/2,c:'#cc3333'},{a:Math.PI/6,c:'#000000'},{a:5*Math.PI/6,c:'#2266cc'}],
+    r:od/2,tR:od/Math.sqrt(3),mode:'trefoil',
+    leg:[{c:'#cc3333',l:'A'},{c:'#000000',l:'B'},{c:'#2266cc',l:'C'}]});
+}
+
+function drawDcXS(){
+  var cOD=(getDcOD(val('dc_cableSize'),val('dc_insulation'),val('dc_material')))/25.4;
+  var it=val('dc_installType'),csi=csz('dc_conduitSize'),ctk=val('dc_conduitType');
+  var nC=Math.max(1,Math.min(parseInt($('dc_numCircuits').value)||1,12));
+  var sp=parseFloat($('dc_circuitSpacing').value)||48,dep=parseFloat($('dc_burialDepth').value)||36;
+  var isCond=it==='conduit',co=CONDUIT_SIZES[csi];
+  var nCond=parseInt(val('dc_condsPerConduit'))||1,tot=nCond*2;
+  var cables=[];
+  if(tot===2){cables=[{dx:-0.5,dy:0,c:'#cc3333'},{dx:0.5,dy:0,c:'#000000'}];}
+  else if(tot===4){cables=[{dx:-0.5,dy:-0.5,c:'#cc3333'},{dx:0.5,dy:-0.5,c:'#000000'},{dx:-0.5,dy:0.5,c:'#cc3333'},{dx:0.5,dy:0.5,c:'#000000'}];}
+  else{cables=[{dx:-0.5,dy:-1,c:'#cc3333'},{dx:0.5,dy:-1,c:'#000000'},{dx:-0.5,dy:0,c:'#cc3333'},{dx:0.5,dy:0,c:'#000000'},{dx:-0.5,dy:1,c:'#cc3333'},{dx:0.5,dy:1,c:'#000000'}];}
+  drawXS({nC:nC,sp:sp,dep:dep,dryH:val('dc_useDryout')?12:0,isCond:isCond,coOD:isCond?co.od_mm/25.4:0,coID:isCond?co.id_mm/25.4:0,ctk:ctk,
+    cables:cables,r:cOD/2,tR:0,mode:'grid',
+    leg:[{c:'#cc3333',l:'DC+'},{c:'#000000',l:'DC−'}]});
+}
+
+function drawLvXS(){
+  var cOD=(getDcOD(val('lv_cableSize'),val('lv_insulation'),val('lv_material')))/25.4;
+  var it=val('lv_installType'),csi=csz('lv_conduitSize'),ctk=val('lv_conduitType');
+  var nC=Math.max(1,Math.min(parseInt($('lv_numCircuits').value)||1,12));
+  var sp=parseFloat($('lv_circuitSpacing').value)||48,dep=parseFloat($('lv_burialDepth').value)||36;
+  var isCond=it==='conduit',co=CONDUIT_SIZES[csi];
+  var cfg=val('lv_phaseConfig');
+  var cables=[],leg=[];
+  if(cfg==='single_phase'){
+    cables=[{dx:-0.5,dy:0,c:'#cc3333'},{dx:0.5,dy:0,c:'#888888'}];
+    leg=[{c:'#cc3333',l:'Hot'},{c:'#888888',l:'N'}];
+  }else if(cfg==='split_phase'){
+    cables=[{dx:-0.5,dy:-0.43,c:'#cc3333'},{dx:0.5,dy:-0.43,c:'#000000'},{dx:0,dy:0.43,c:'#888888'}];
+    leg=[{c:'#cc3333',l:'L1'},{c:'#000000',l:'L2'},{c:'#888888',l:'N'}];
+  }else if(cfg==='three_phase_delta'){
+    cables=[{a:-Math.PI/2,c:'#cc3333'},{a:Math.PI/6,c:'#000000'},{a:5*Math.PI/6,c:'#2266cc'}];
+    leg=[{c:'#cc3333',l:'A'},{c:'#000000',l:'B'},{c:'#2266cc',l:'C'}];
+  }else{
+    cables=[{dx:-0.5,dy:-0.5,c:'#cc3333'},{dx:0.5,dy:-0.5,c:'#000000'},{dx:-0.5,dy:0.5,c:'#2266cc'},{dx:0.5,dy:0.5,c:'#888888'}];
+    leg=[{c:'#cc3333',l:'A'},{c:'#000000',l:'B'},{c:'#2266cc',l:'C'},{c:'#888888',l:'N'}];
+  }
+  var mode=(cfg==='three_phase_delta')?'trefoil':'grid';
+  var tR=(cfg==='three_phase_delta')?(cOD/Math.sqrt(3)):0;
+  drawXS({nC:nC,sp:sp,dep:dep,dryH:val('lv_useDryout')?12:0,isCond:isCond,coOD:isCond?co.od_mm/25.4:0,coID:isCond?co.id_mm/25.4:0,ctk:ctk,
+    cables:cables,r:cOD/2,tR:tR,mode:mode,leg:leg});
+}
+
+function drawXS(o){
+  var nC=o.nC,sp=o.sp,dep=o.dep,dH=o.dryH,r=o.r,tR=o.tR;
+  // World extents use a fixed margin (independent of the dry-out zone) so the
+  // grade line and depth dimension render identically across MV/DC/LVAC and
+  // whether or not dry-out is enabled. The dry-out box is still drawn at its
+  // true size (dP=dH*sc) below; the 6/8/24 paddings keep it inside the frame.
+  var wL=-6-20,wR=(nC-1)*sp+6+8;
+  var wB=dep+6+24,grA=Math.max(8,wB*0.06+(nC>1?20:0)),wT=-grA;
+  var wW=wR-wL,wH=wB-wT;
+  var svgW=700,svgH=Math.max(280,Math.min(520,svgW*(wH/wW)+20));
+  var sc=Math.min((svgW-10)/wW,(svgH-10)/wH);
+  var ox=5-wL*sc,oy=5-wT*sc;
+  function tx(v){return ox+v*sc;}function ty(v){return oy+v*sc;}
+  var gY=ty(0),cY=ty(dep),dP=dH*sc,cR=r*sc,tRP=tR*sc;
+  var cOR=(o.coOD*sc)/2,cIR=(o.coID*sc)/2,cW=cOR-cIR;
+  var cCol=o.isCond?(o.ctk==='hdpe'?'#3a3a3a':'#6a6a6a'):'none';
+  var cts=[];for(var i=0;i<nC;i++)cts.push({x:tx(i*sp),y:cY});
+
+  var s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+svgW+' '+svgH+'" style="background:#2a2520">';
+  s+='<defs><marker id="aD" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#FBB52B"/></marker>';
+  s+='<marker id="aU" markerWidth="6" markerHeight="4" refX="0" refY="2" orient="auto-start-reverse"><path d="M0,0 L6,2 L0,4" fill="#FBB52B"/></marker>';
+  s+='<marker id="aR" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#FBB52B"/></marker>';
+  s+='<marker id="aL" markerWidth="6" markerHeight="4" refX="0" refY="2" orient="auto-start-reverse"><path d="M0,0 L6,2 L0,4" fill="#FBB52B"/></marker></defs>';
+  s+='<rect x="0" y="0" width="'+svgW+'" height="'+gY+'" fill="#3a3530" opacity="0.5"/>';
+  s+='<rect x="0" y="'+gY+'" width="'+svgW+'" height="'+(svgH-gY)+'" fill="#5a4a3a"/>';
+  s+='<line x1="0" y1="'+gY+'" x2="'+svgW+'" y2="'+gY+'" stroke="#FBB52B" stroke-width="2" opacity="0.6"/>';
+  s+='<text x="10" y="'+(gY-8)+'" font-size="11" fill="#FBB52B" font-family="Exo 2,sans-serif" opacity="0.8">GRADE</text>';
+
+  if(nC>1){var ccY=(dP>0?cY-dP:cY-20)-16;
+    s+='<line x1="'+cts[0].x+'" y1="'+ccY+'" x2="'+cts[1].x+'" y2="'+ccY+'" stroke="#FBB52B" stroke-width="0.8" marker-end="url(#aR)" marker-start="url(#aL)" opacity="0.7"/>';
+    s+='<text x="'+((cts[0].x+cts[1].x)/2)+'" y="'+(ccY-6)+'" font-size="9" fill="#FBB52B" font-family="Exo 2,sans-serif" text-anchor="middle" opacity="0.8">'+sp+'" c/c</text>';}
+
+  if(dP>0){for(var ci=0;ci<cts.length;ci++){var c=cts[ci];
+    s+='<rect x="'+(c.x-dP)+'" y="'+(c.y-dP)+'" width="'+(dP*2)+'" height="'+(dP*2)+'" fill="#a89060" fill-opacity="0.2" stroke="#FBB52B" stroke-width="1" stroke-dasharray="5 3" stroke-opacity="0.4"/>';}}
+
+  var dx=tx(wL+4);
+  s+='<line x1="'+dx+'" y1="'+(gY+6)+'" x2="'+dx+'" y2="'+cY+'" stroke="#FBB52B" stroke-width="0.8" marker-end="url(#aD)" marker-start="url(#aU)" opacity="0.7"/>';
+  s+='<line x1="'+(dx-5)+'" y1="'+cY+'" x2="'+(dx+5)+'" y2="'+cY+'" stroke="#FBB52B" stroke-width="0.8" opacity="0.7"/>';
+  s+='<text x="'+(dx+7)+'" y="'+((gY+cY)/2+4)+'" font-size="9" fill="#FBB52B" font-family="Exo 2,sans-serif" opacity="0.8">'+dep+'"</text>';
+
+  for(ci=0;ci<cts.length;ci++){var c=cts[ci];
+    if(o.isCond){s+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+cOR+'" fill="none" stroke="'+cCol+'" stroke-width="'+Math.max(2,cW)+'"/>';
+      s+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+cIR+'" fill="#2a2520" fill-opacity="0.6"/>';}
+    for(var j=0;j<o.cables.length;j++){var cb=o.cables[j];var cx,cy;
+      if(o.mode==='trefoil'&&cb.a!==undefined){cx=c.x+Math.cos(cb.a)*tRP;cy=c.y+Math.sin(cb.a)*tRP;}
+      else{cx=c.x+(cb.dx||0)*cR*2;cy=c.y+(cb.dy||0)*cR*2;}
+      s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+cR+'" fill="'+cb.c+'"/>';}
+    var labY=c.y+(dP>0?dP:cR+6)+16;
+    s+='<text x="'+c.x+'" y="'+labY+'" font-size="10" fill="#FBB52B" text-anchor="middle" font-family="Exo 2,sans-serif" font-weight="600" opacity="0.9">CKT '+(ci+1)+'</text>';}
+
+  var ly=svgH-40,lx=Math.max(8,tx(wL+2)),lw=o.leg.length*50+20;
+  s+='<g transform="translate('+lx+','+ly+')">';
+  for(var li=0;li<o.leg.length;li++){var px=14+li*50;
+    s+='<circle cx="'+px+'" cy="16" r="5" fill="'+o.leg[li].c+'"/><text x="'+(px+8)+'" y="20" font-size="8" fill="#FBB52B" font-family="Exo 2,sans-serif" font-weight="600">'+o.leg[li].l+'</text>';}
+  s+='</g></svg>';
+  $('xsection').innerHTML=s;
+}
+
+// API
+var _calcSeq=0,_calcTimer=null;
+// Debounced, latest-wins calculate: rapid input edits only fire one request,
+// and a slow earlier response can never overwrite a newer one. (review FE-2)
+function scheduleCalculate(){
+  if(_calcTimer)clearTimeout(_calcTimer);
+  _calcTimer=setTimeout(function(){_calcTimer=null;calculate();},150);
+}
+function calculate(){
+  var params;
+  if(currentSystem==='mv'){
+    params={systemType:'mv',cableSize:val('mv_cableSize'),installType:val('mv_installType'),conduitType:val('mv_conduitType'),conduitSize:csz('mv_conduitSize'),soilTemp:val('mv_soilTemp'),soilRhoNative:val('mv_soilRhoNative')/100,soilRhoDry:val('mv_soilRhoDry')/100,loadFactor:val('mv_loadFactor'),numCircuits:parseInt($('mv_numCircuits').value)||1,circuitSpacing:parseFloat($('mv_circuitSpacing').value)||48,burialDepth:val('mv_burialDepth'),useDryout:val('mv_useDryout'),voltage_kv:val('mv_voltage')};
+    // Block a cable whose insulation class is below the operating voltage.
+    var _cls=mvClassOf(params.cableSize),_ov=params.voltage_kv;
+    if(_ov&&_ov>_cls){$('errorBox').textContent='Operating voltage '+_ov+' kV exceeds the '+_cls+' kV cable class — pick a higher-class cable or lower the voltage.';$('errorBox').classList.remove('hidden');return;}
+  }else if(currentSystem==='dc'){
+    params={systemType:'dc',cableSize:val('dc_cableSize'),material:val('dc_material'),insulation:val('dc_insulation'),installType:val('dc_installType'),conduitType:val('dc_conduitType'),conduitSize:csz('dc_conduitSize'),conductorsPerConduit:parseInt(val('dc_condsPerConduit'))||1,soilTemp:val('dc_soilTemp'),soilRhoNative:val('dc_soilRhoNative')/100,soilRhoDry:val('dc_soilRhoDry')/100,loadFactor:val('dc_loadFactor'),numCircuits:parseInt($('dc_numCircuits').value)||1,circuitSpacing:parseFloat($('dc_circuitSpacing').value)||48,burialDepth:val('dc_burialDepth'),useDryout:val('dc_useDryout')};
+  }else if(currentSystem==='lvac'){
+    params={systemType:'lvac',cableSize:val('lv_cableSize'),material:val('lv_material'),insulation:val('lv_insulation'),phaseConfig:val('lv_phaseConfig'),neutralFactor:parseFloat($('lv_neutralFactor').value)||0,installType:val('lv_installType'),conduitType:val('lv_conduitType'),conduitSize:csz('lv_conduitSize'),soilTemp:val('lv_soilTemp'),soilRhoNative:val('lv_soilRhoNative')/100,soilRhoDry:val('lv_soilRhoDry')/100,loadFactor:val('lv_loadFactor'),numCircuits:parseInt($('lv_numCircuits').value)||1,circuitSpacing:parseFloat($('lv_circuitSpacing').value)||48,burialDepth:val('lv_burialDepth'),useDryout:val('lv_useDryout')};
+  }else return;
+  var _my=++_calcSeq;
+  fetch('/api/calculate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(params)})
+  .then(function(r){return r.json().then(function(j){return {ok:r.ok,status:r.status,body:j};},function(){return {ok:r.ok,status:r.status,body:{}};});}).then(function(x){
+    if(_my!==_calcSeq)return;  // a newer request has superseded this one
+    var r=x.body||{};
+    if(!x.ok&&!r.error){r.error='Request failed (status '+x.status+')';}
+    if(r.error){$('errorBox').textContent='Server error: '+r.error;$('errorBox').classList.remove('hidden');return;}
+    $('errorBox').classList.add('hidden');lastResult=r;lastResult._params=params;
+    lastResult._paramsRaw={soilRhoNative:params.soilRhoNative*100,soilRhoDry:(params.soilRhoDry||params.soilRhoNative)*100};
+    renderResults(r);
+  }).catch(function(e){if(_my!==_calcSeq)return;$('errorBox').textContent='Connection error: '+e.message;$('errorBox').classList.remove('hidden');});
+}
+
+function renderResults(r){
+  $('rAmp').textContent=r.ampacity;$('rAmpRaw').textContent=r.ampacityRaw;$('rTemp').textContent=r.conductorTemp;
+  var _info=$('rInfo');_info.textContent='';  // build as text, not HTML, so server-echoed values can never inject markup (review FE-3)
+  _info.appendChild(document.createTextNode(r.cableLabel));
+  _info.appendChild(document.createElement('br'));
+  _info.appendChild(document.createTextNode((r.systemType==='mv'?'Trefoil · ':'')+(r.phaseConfig?r.phaseConfig+' · ':'')+(r._params.installType==='conduit'?'In Conduit':'Direct Burial')));
+  var isCond=r._params.installType==='conduit';
+  var d;
+  if(r.systemType==='dc'){
+    d=[['R_dc',r.Rdc+' μΩ/m'],['Cable OD',r.cableOD+' mm'],['Group OD',r.groupOD+' mm'],['Max Temp',r.maxTemp+'°C'],['T1 (Insulation)',r.T1+' K·m/W'],['T4 (Total Ext)',r.T4t+' K·m/W']];
+    if(isCond){d.push(['T4 (Duct Air)',r.T4a+' K·m/W']);d.push(['T4 (Duct Wall)',r.T4w+' K·m/W']);}
+    d.push(['ΔT Mutual',r.dTm+'°C']);
+  }else if(r.systemType==='lvac'){
+    d=[['R_ac',r.Rac+' μΩ/m'],['Skin Effect',r.ys+'%'],['Proximity',r.yp+'%'],['Config',r.phaseConfig],['Cable OD',r.cableOD+' mm'],['Max Temp',r.maxTemp+'°C'],['T1 (Insulation)',r.T1+' K·m/W'],['T4 (Total Ext)',r.T4t+' K·m/W']];
+    if(isCond&&r.T4a>0){d.push(['T4 (Duct Air)',r.T4a+' K·m/W']);d.push(['T4 (Duct Wall)',(r.T4w||0)+' K·m/W']);}
+    d.push(['ΔT Mutual',r.dTm+'°C']);
+  }else{
+    d=[['Voltage',r.voltageKv+' kV ('+r.voltageClass+')'],['R_ac',r.Rac+' μΩ/m'],['Skin Effect',r.ys+'%'],['Proximity',r.yp+'%'],['Shield Loss (λ₁)',r.l1+'%'],['Dielectric Loss',r.Wd+' W/m'],['Trefoil OD',r.tOD+' mm'],['T1 (Insulation)',r.T1+' K·m/W'],['T4 (Total Ext)',r.T4t+' K·m/W']];
+    if(isCond&&r.T4a>0){d.push(['T4 (Duct Air)',r.T4a+' K·m/W']);d.push(['T4 (Duct Wall)',(r.T4w||0)+' K·m/W']);}
+    d.push(['ΔT Mutual',r.dTm+'°C']);
+  }
+  var _grid=$('detailGrid');_grid.textContent='';  // build cards with textContent (review FE-3)
+  for(var i=0;i<d.length;i++){
+    var _c=document.createElement('div');_c.className='detail-card';
+    var _dl=document.createElement('div');_dl.className='dl';_dl.textContent=d[i][0];
+    var _dv=document.createElement('div');_dv.className='dv';_dv.textContent=d[i][1];
+    _c.appendChild(_dl);_c.appendChild(_dv);_grid.appendChild(_c);
+  }
+}
+
+function onAnyChange(){
+  updateVisibility();
+  if(currentSystem==='mv')updateMvConduitSizes();
+  if(currentSystem==='dc')updateDcConduitSizes();
+  if(currentSystem==='lvac')updateLvConduitSizes();
+  drawCrossSection();scheduleCalculate();
+}
+
+var ids=['mv_cableSize','mv_voltage','mv_installType','mv_conduitType','mv_conduitSize','mv_burialDepth','mv_numCircuits','mv_circuitSpacing','mv_soilTemp','mv_soilRhoNative','mv_soilRhoDry','mv_loadFactor','mv_useDryout','dc_cableSize','dc_material','dc_insulation','dc_installType','dc_conduitType','dc_conduitSize','dc_condsPerConduit','dc_burialDepth','dc_numCircuits','dc_circuitSpacing','dc_soilTemp','dc_soilRhoNative','dc_soilRhoDry','dc_loadFactor','dc_useDryout','lv_cableSize','lv_material','lv_insulation','lv_phaseConfig','lv_neutralFactor','lv_installType','lv_conduitType','lv_conduitSize','lv_burialDepth','lv_numCircuits','lv_circuitSpacing','lv_soilTemp','lv_soilRhoNative','lv_soilRhoDry','lv_loadFactor','lv_useDryout'];
+for(var i=0;i<ids.length;i++){var el=$(ids[i]);if(el){el.addEventListener('input',onAnyChange);el.addEventListener('change',onAnyChange);}}
+var HOME_SLIDES=[
+ {src:'/docs/screenshots/01-mv-trefoil-direct.png',cap:'MV trefoil, direct-buried \u2014 live dimensioned cross-section'},
+ {src:'/docs/screenshots/02-mv-multi-circuit.png',cap:'Multiple circuits with center-to-center spacing'},
+ {src:'/docs/screenshots/03-mv-conduit.png',cap:'Single-core cables grouped in a conduit'},
+ {src:'/docs/screenshots/04-dc-circuits.png',cap:'DC solar / battery circuits in conduit'},
+ {src:'/docs/screenshots/05-three-phase-conduit.png',cap:'Three-phase circuits in conduit with spacing'}
+];
+var _carIdx=0,_carTimer=null,_carN=0;
+// Preload the screenshots; only build the carousel from the ones that actually
+// load, and keep the whole section hidden if none are present (so production is
+// never an empty box). renderCarousel() is split out so it can be tested.
+function initHomeCarousel(){
+  var sec=$('homeShots');if(!sec)return;
+  var loaded=[],pending=HOME_SLIDES.length;if(!pending)return;
+  HOME_SLIDES.forEach(function(s){
+    var img=new Image();
+    img.onload=function(){loaded.push(s);settle();};
+    img.onerror=function(){settle();};
+    img.src=s.src;
+  });
+  function settle(){if(--pending===0){
+    loaded.sort(function(a,b){return HOME_SLIDES.indexOf(a)-HOME_SLIDES.indexOf(b);});
+    renderCarousel(loaded);
+  }}
+}
+function renderCarousel(list){
+  var vp=$('carouselViewport'),dots=$('carouselDots'),sec=$('homeShots');
+  if(!vp||!dots||!sec||!list.length)return;
+  _carIdx=0;_carN=list.length;vp.innerHTML='';dots.innerHTML='';
+  list.forEach(function(s,i){
+    var slide=document.createElement('div');slide.className='carousel-slide'+(i===0?' active':'');
+    var im=document.createElement('img');im.src=s.src;im.alt=s.cap;
+    var cap=document.createElement('div');cap.className='carousel-cap';cap.textContent=s.cap;
+    slide.appendChild(im);slide.appendChild(cap);vp.appendChild(slide);
+    var dot=document.createElement('button');dot.setAttribute('aria-label','Go to slide '+(i+1));
+    if(i===0)dot.className='active';
+    (function(idx){dot.onclick=function(){carGo(idx);carStart();};})(i);
+    dots.appendChild(dot);
+  });
+  var single=_carN<2;
+  $('carPrev').style.display=single?'none':'';
+  $('carNext').style.display=single?'none':'';
+  dots.style.display=single?'none':'';
+  sec.style.display='';
+  var car=$('homeCarousel');
+  if(car&&!car._hoverBound){car._hoverBound=true;car.addEventListener('mouseenter',carStop);car.addEventListener('mouseleave',carStart);}
+  if(!single)carStart();
+}
+function carGo(i){
+  var sl=$('carouselViewport').children,dt=$('carouselDots').children;if(!sl.length)return;
+  _carIdx=(i%sl.length+sl.length)%sl.length;
+  for(var k=0;k<sl.length;k++){sl[k].classList.toggle('active',k===_carIdx);if(dt[k])dt[k].classList.toggle('active',k===_carIdx);}
+}
+function carMove(d){carGo(_carIdx+d);carStart();}
+function carStart(){carStop();if(_carN>1)_carTimer=setInterval(function(){carGo(_carIdx+1);},5000);}
+function carStop(){if(_carTimer){clearInterval(_carTimer);_carTimer=null;}}
+
+buildSoilMenus();
+updateMvConduitSizes();updateDcConduitSizes();updateLvConduitSizes();updateVisibility();drawCrossSection();calculate();
+showModule('home');
+initHomeCarousel();
+
+// ═══════════════════════════════════════════════════════════════
+// SOIL TEMPERATURE LOOKUP (Open-Meteo API)
+// ═══════════════════════════════════════════════════════════════
+var _soilTargetField=null;
+var _soilLastTemp=null;
+
+function openSoilLookup(fieldId){
+  _soilTargetField=fieldId;
+  _soilLastTemp=null;
+  $('soilLookupInput').value='';
+  $('soilLookupStatus').textContent='';
+  $('soilLookupResult').classList.add('hidden');
+  $('soilLookupOverlay').style.display='flex';
+  setTimeout(function(){$('soilLookupInput').focus();},100);
+}
+
+function closeSoilLookup(){
+  $('soilLookupOverlay').style.display='none';
+}
+
+function applySoilTemp(){
+  if(_soilTargetField && _soilLastTemp!==null){
+    $(_soilTargetField).value=_soilLastTemp;
+    onAnyChange();
+    closeSoilLookup();
+  }
+}
+
+function soilLookupSearch(){
+  var input=$('soilLookupInput').value.trim();
+  if(!input){$('soilLookupStatus').textContent='Enter a location.';return;}
+  $('soilLookupStatus').textContent='Searching...';
+  $('soilLookupResult').classList.add('hidden');
+
+  // Check if input looks like coordinates (lat, lon)
+  var coordMatch=input.match(/^\s*(-?\d+\.?\d*)\s*[,\s]\s*(-?\d+\.?\d*)\s*$/);
+  if(coordMatch){
+    var lat=parseFloat(coordMatch[1]),lon=parseFloat(coordMatch[2]);
+    if(lat>=-90&&lat<=90&&lon>=-180&&lon<=180){
+      fetchSoilTemp(lat,lon,lat.toFixed(2)+'°, '+lon.toFixed(2)+'°');
+      return;
+    }
+  }
+
+  // Otherwise geocode the city name.
+  // Open-Meteo wants just the city name — strip state/country after comma.
+  var cityName=input.split(',')[0].trim();
+  fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(cityName)+'&count=5&language=en')
+  .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  .then(function(data){
+    if(!data.results||data.results.length===0){
+      $('soilLookupStatus').textContent='Location not found. Try a different city name or use lat, lon coordinates.';
+      return;
+    }
+    // If user provided a state/country filter, try to match it
+    var suffix=input.indexOf(',')>-1?input.substring(input.indexOf(',')+1).trim().toUpperCase():'';
+    var loc=data.results[0];
+    if(suffix){
+      for(var i=0;i<data.results.length;i++){
+        var r=data.results[i];
+        var admin=(r.admin1||'').toUpperCase();
+        var cc=(r.country_code||'').toUpperCase();
+        var country=(r.country||'').toUpperCase();
+        if(admin.indexOf(suffix)===0||cc===suffix||country.indexOf(suffix)===0){
+          loc=r;break;
+        }
+      }
+    }
+    var label=loc.name+(loc.admin1?', '+loc.admin1:'')+(loc.country_code?' ('+loc.country_code+')':'');
+    fetchSoilTemp(loc.latitude,loc.longitude,label);
+  })
+  .catch(function(e){
+    $('soilLookupStatus').textContent='Geocoding error: '+e.message;
+  });
+}
+
+function fetchSoilTemp(lat,lon,locationLabel){
+  $('soilLookupStatus').textContent='Fetching 5-year soil temperature history...';
+  var now=new Date();
+  var endYear=now.getFullYear()-1;
+  var startYear=endYear-4;
+  var startDate=startYear+'-01-01';
+  var endDate=endYear+'-12-31';
+  // Archive API uses depth bands: 28_to_100cm covers typical burial depths (36"=91cm)
+  fetch('https://archive-api.open-meteo.com/v1/archive?latitude='+lat+'&longitude='+lon+'&start_date='+startDate+'&end_date='+endDate+'&daily=soil_temperature_28_to_100cm_mean&timezone=auto')
+  .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  .then(function(data){
+    if(!data.daily||!data.daily.soil_temperature_28_to_100cm_mean){
+      $('soilLookupStatus').textContent='Soil temperature data not available for this location.';
+      return;
+    }
+    var temps=data.daily.soil_temperature_28_to_100cm_mean.filter(function(t){return t!==null;});
+    if(temps.length===0){
+      $('soilLookupStatus').textContent='No soil temperature readings available.';
+      return;
+    }
+    // Peak daily mean across the 5-year period = design worst-case
+    var maxTemp=Math.round(Math.max.apply(null,temps));
+    _soilLastTemp=maxTemp;
+    $('soilLookupStatus').textContent='';
+    $('soilLookupLocation').textContent=locationLabel;
+    $('soilLookupCoords').textContent=lat.toFixed(4)+', '+lon.toFixed(4);
+    $('soilLookupTemp').textContent=maxTemp;
+    $('soilLookupResult').classList.remove('hidden');
+  })
+  .catch(function(e){
+    $('soilLookupStatus').textContent='API error: '+e.message;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PDF EXPORT
+// ═══════════════════════════════════════════════════════════════
+function exportPDF(){
+  if(!lastResult){alert('Run a calculation first.');return;}
+  var payload={
+    params:lastResult._params,
+    result:lastResult,
+    project:{
+      projectNumber:$('projectNumber').value||'',
+      projectName:$('projectName').value||'',
+      engineerName:$('engineerName').value||''
+    }
+  };
+  fetch('/api/export-pdf',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+  .then(function(r){
+    if(!r.ok){
+      return r.json().then(function(err){
+        throw new Error(err.error||'PDF generation failed (status '+r.status+')');
+      });
+    }
+    return r.blob();
+  }).then(function(blob){
+    if(blob instanceof Blob){
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');
+      a.href=url;
+      a.download='Ampacity_'+($('projectNumber').value||'NoProject')+'_'+currentSystem+'_'+new Date().toISOString().slice(0,10)+'.pdf';
+      a.click();URL.revokeObjectURL(url);
+    }
+  }).catch(function(e){alert('PDF export error:\n\n'+e.message);});
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SAVE / LOAD CONFIGURATIONS (local .json files)
+// ═══════════════════════════════════════════════════════════════
+
+function gatherCurrentConfig(){
+  var cfg={
+    _format:'gridworks-embr-config',
+    _version:'1.2',
+    configName:$('configName').value||'Unnamed',
+    systemType:currentSystem,
+    projectNumber:$('projectNumber').value,
+    projectName:$('projectName').value,
+    engineerName:$('engineerName').value,
+    savedAt:new Date().toISOString()
+  };
+  var allIds=['mv_cableSize','mv_voltage','mv_installType','mv_conduitType','mv_conduitSize','mv_burialDepth','mv_numCircuits','mv_circuitSpacing','mv_soilTemp','mv_soilRhoNative','mv_soilRhoDry','mv_loadFactor','mv_useDryout','dc_cableSize','dc_material','dc_insulation','dc_installType','dc_conduitType','dc_conduitSize','dc_condsPerConduit','dc_burialDepth','dc_numCircuits','dc_circuitSpacing','dc_soilTemp','dc_soilRhoNative','dc_soilRhoDry','dc_loadFactor','dc_useDryout','lv_cableSize','lv_material','lv_insulation','lv_phaseConfig','lv_neutralFactor','lv_installType','lv_conduitType','lv_conduitSize','lv_burialDepth','lv_numCircuits','lv_circuitSpacing','lv_soilTemp','lv_soilRhoNative','lv_soilRhoDry','lv_loadFactor','lv_useDryout'];
+  var fields={};
+  for(var i=0;i<allIds.length;i++){
+    var el=$(allIds[i]);if(!el)continue;
+    if(el.type==='checkbox')fields[allIds[i]]=el.checked;
+    else if(el.type==='number')fields[allIds[i]]=parseFloat(el.value);
+    else fields[allIds[i]]=el.value;
+  }
+  cfg.fields=fields;
+  return cfg;
+}
+
+function applyConfig(cfg){
+  if(cfg.systemType)setSystem(cfg.systemType);
+  if(cfg.projectNumber!==undefined)$('projectNumber').value=cfg.projectNumber;
+  if(cfg.projectName!==undefined)$('projectName').value=cfg.projectName;
+  if(cfg.engineerName!==undefined)$('engineerName').value=cfg.engineerName;
+  if(cfg.configName!==undefined)$('configName').value=cfg.configName;
+  if(cfg.fields){
+    var keys=Object.keys(cfg.fields);
+    for(var i=0;i<keys.length;i++){
+      var el=$(keys[i]);if(!el)continue;
+      if(el.type==='checkbox')el.checked=!!cfg.fields[keys[i]];
+      else el.value=cfg.fields[keys[i]];
+    }
+  }
+  onAnyChange();
+}
+
+function showConfigStatus(msg, isError){
+  var el=$('configStatus');
+  el.textContent=msg;
+  el.style.color=isError?'#f5aaaa':'var(--gw-yellow)';
+  el.style.display='block';
+  setTimeout(function(){el.style.display='none';},4000);
+}
+
+function saveConfigFile(){
+  var name=$('configName').value;
+  if(!name){alert('Enter a configuration name first.');$('configName').focus();return;}
+  var cfg=gatherCurrentConfig();
+  var json=JSON.stringify(cfg,null,2);
+  var blob=new Blob([json],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  var safeName=name.replace(/[^a-zA-Z0-9_\- ]/g,'').replace(/\s+/g,'_');
+  a.download='gw_config_'+safeName+'_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showConfigStatus('Configuration saved: '+a.download, false);
+}
+
+function openConfigFile(evt){
+  var file=evt.target.files[0];
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var cfg=JSON.parse(e.target.result);
+      if(cfg._format!=='gridworks-embr-config' && cfg._format!=='gridworks-amber-config' && cfg._format!=='gridworks-ampacity-config'){
+        alert('This file does not appear to be a Gridworks EMBR configuration.');
+        return;
+      }
+      applyConfig(cfg);
+      var label=cfg.configName||file.name;
+      var sys=cfg.systemType==='mv'?'MV':cfg.systemType==='dc'?'DC':'LVAC';
+      var date=cfg.savedAt?new Date(cfg.savedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
+      showConfigStatus('Loaded: '+label+' ('+sys+(date?' · '+date:'')+')', false);
+    }catch(ex){
+      alert('Invalid configuration file: '+ex.message);
+    }
+  };
+  reader.readAsText(file);
+  evt.target.value='';
+}
+</script>
+</body>
+</html>
