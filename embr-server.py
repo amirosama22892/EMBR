@@ -2383,6 +2383,10 @@ def validate_params(params):
 
 class AmpacityHandler(SimpleHTTPRequestHandler):
 
+    # Avoid advertising the host Python version in the Server header.
+    server_version = "EMBR/1.2"
+    sys_version = ""
+
     def __init__(self, *args, **kwargs):
         # Pin the served root to the app directory (not the launch CWD) so only
         # the intended asset set is reachable regardless of where the process is
@@ -2392,6 +2396,14 @@ class AmpacityHandler(SimpleHTTPRequestHandler):
     def list_directory(self, path):
         self.send_error(404, "Not found")
         return None
+
+    def end_headers(self):
+        """Apply baseline browser-security headers to every response."""
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("X-Frame-Options", "DENY")
+        self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
+        self.send_header("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+        super().end_headers()
 
     def _send_cors(self):
         # Same-origin only by default (no Access-Control-Allow-Origin header).
@@ -2504,6 +2516,8 @@ class AmpacityHandler(SimpleHTTPRequestHandler):
         return None
 
     def do_GET(self):
+        if urlparse(self.path).path == "/healthz":
+            return self._health_response(include_body=True)
         target = self._resolve_static()
         if target is None:
             self.send_error(404, "Not found")
@@ -2512,12 +2526,25 @@ class AmpacityHandler(SimpleHTTPRequestHandler):
         return SimpleHTTPRequestHandler.do_GET(self)
 
     def do_HEAD(self):
+        if urlparse(self.path).path == "/healthz":
+            return self._health_response(include_body=False)
         target = self._resolve_static()
         if target is None:
             self.send_error(404, "Not found")
             return
         self.path = target
         return SimpleHTTPRequestHandler.do_HEAD(self)
+
+    def _health_response(self, include_body=True):
+        """Small dependency-free readiness endpoint used by Render."""
+        data = b'{"status":"ok"}'
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", len(data))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        if include_body:
+            self.wfile.write(data)
 
     def _json_response(self, code, obj):
         data = json.dumps(obj).encode()

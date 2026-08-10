@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: embr
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python test_input_validation.py && python tb880_verification.py && python mv_iec_crosscheck.py
+    startCommand: python embr-server.py
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
+    maxShutdownDelaySeconds: 30

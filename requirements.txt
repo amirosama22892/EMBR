@@ -2,7 +2,7 @@
 #
 # The calculation engines and HTTP server are Python standard library only.
 # ReportLab is required solely for the PDF export endpoint (/api/export-pdf).
-# Keep this list minimal — the CI deploy guard (.github/workflows/deploy.yml)
-# blocks any package other than the ones explicitly allowlisted there, so
-# adding a new dependency is a deliberate, reviewed decision.
+# Keep this list minimal. The CI and Render build run the regression and
+# engineering verification suites after installing it, so dependency changes
+# should remain deliberate and reviewed.
 reportlab>=4.0,<5.0

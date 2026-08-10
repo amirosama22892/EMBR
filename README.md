@@ -2,7 +2,7 @@
 
 **Engineered Model for Buried-cable Ratings**
 
-EMBR is an in-house ampacity calculator for underground power cables. It implements the IEC 60287 / Neher-McGrath thermal circuit methodology in a lightweight Python server (standard library plus ReportLab for PDF export) with a browser-based frontend. Three calculation engines cover the cable systems we design most often: MV trefoil (35 kV), DC (solar/battery), and LVAC (power feeders).
+EMBR is an in-house ampacity calculator for underground power cables. It implements the IEC 60287 / Neher-McGrath thermal circuit methodology in a lightweight Python server (standard library plus ReportLab for PDF export) with a browser-based frontend. Three calculation engines cover MV trefoil (15, 25, and 35 kV), DC (solar/battery), and LVAC (power feeders).
 
 EMBR is validated against Cymcap 8.1 Rev 2 across a 62-scenario matrix — 58 of 58 valid scenarios pass within ±5%, with the remaining 4 excluded due to confirmed Cymcap model errors (not EMBR errors).
 
@@ -10,7 +10,7 @@ EMBR is validated against Cymcap 8.1 Rev 2 across a 62-scenario matrix — 58 of
 
 ## Quickstart
 
-EMBR requires Python 3.7+. The calculation engines and HTTP server use only the standard library; the PDF export endpoint uses ReportLab, the sole runtime dependency.
+EMBR supports Python 3.7+; Python 3.12 is the tested deployment version. The calculation engines and HTTP server use only the standard library; the PDF export endpoint uses ReportLab, the sole runtime dependency.
 
 ```
 pip install -r requirements.txt
@@ -18,6 +18,16 @@ python embr-server.py
 ```
 
 Open [http://localhost:8080](http://localhost:8080) in any browser. The UI auto-calculates on every input change.
+
+Run the regression and engineering verification suites before deployment:
+
+```bash
+python test_input_validation.py
+python tb880_verification.py
+python mv_iec_crosscheck.py
+npm ci
+npm test
+```
 
 > **Note:** The header logo expects `gridworks_logo.png` in the same directory as `embr-server.py`. The app works fine without it — you just won't see the logo.
 
@@ -29,17 +39,34 @@ Open [http://localhost:8080](http://localhost:8080) in any browser. The UI auto-
 EMBR/
 ├── embr-server.py                  # Python backend — all three engines + PDF report writer
 ├── embr.html                       # Single-file frontend (HTML/CSS/JS)
-├── gridworks_logo.png              # Header logo (not tracked in repo — add manually)
+├── render.yaml                     # Render Blueprint
+├── DEPLOYMENT.md                   # Render setup, smoke test, rollback, troubleshooting
+├── gridworks_logo.png              # Header logo
 ├── favicon.ico                     # Icon for browser tab
+├── requirements.txt                # Runtime dependency list
+├── test_input_validation.py        # HTTP/API regression suite
+├── test_frontend.js                # Browser integration suite (jsdom)
+├── tb880_verification.py           # CIGRE TB 880 verification
+└── mv_iec_crosscheck.py            # Independent 15/25 kV IEC cross-check
 ```
+
+---
+
+## Deploy to Render
+
+The repository includes a Render Blueprint. In Render, choose **New > Blueprint**, connect this repository, and apply `render.yaml`. The build installs dependencies and runs all Python verification suites before Render starts the service. Render then checks `GET /healthz` before routing traffic.
+
+No database, disk, secret, or manually configured `PORT` is required. The free instance plan is selected in the Blueprint for an easy first launch; choose an always-on paid plan if cold starts are unacceptable.
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for the full deployment checklist, manual setup values, smoke tests, access considerations, environment variables, troubleshooting, and rollback steps.
 
 ---
 
 ## Calculation Engines
 
-### MV Trefoil (35 kV)
+### MV Trefoil (15 / 25 / 35 kV)
 
-Covers 35 kV MV-105 TR-XLPE aluminum cables in touching trefoil, direct burial or in conduit. Cable library is Priority Wire #4070-17, sizes 4/0 AWG through 1500 kcmil.
+Covers 15, 25, and 35 kV MV-105 TR-XLPE aluminum cables in touching trefoil, direct burial or in conduit. The 15/25 kV libraries use Southwire SPEC 81102 / 81142 constructions; the 35 kV library uses Priority Wire #4070-17. Operating voltage is user-selectable and cannot exceed the selected cable's insulation class.
 
 Thermal model:
 
@@ -109,7 +136,8 @@ Runs an ampacity calculation. The frontend calls this on every input change.
 
 | Parameter | Type | Description |
 |---|---|---|
-| `cableSize` | string | `"4/0"`, `"500"`, `"750"`, `"1000"`, `"1250"`, or `"1500"` |
+| `cableSize` | string | A key from the 15, 25, or 35 kV MV library (for example `"15kv_500"`, `"25kv_750"`, or legacy 35 kV key `"500"`) |
+| `voltage_kv` | number | Line-to-line operating voltage in kV; must not exceed the selected cable's voltage class |
 
 **DC-specific:**
 
@@ -169,7 +197,7 @@ Validated against Cymcap 8.1 Rev 2 using a 62-scenario matrix covering a range o
 
 The 4 excluded scenarios have confirmed Cymcap model setup errors (wrong conduit material, missing cables, wrong cable size). See `Cymcap Model Corrections.docx` for details. Once corrected and re-exported, they can be re-validated.
 
-**Validation matrix:** `Cymcap Validation/Cymcap_Validation_Matrix - 4.7.2026.xlsx` contains all scenario parameters, Cymcap target ampacities, EMBR results, and delta percentages.
+**Validation matrix:** `docs/EMBR_Cymcap_15-25kV_Matrix.xlsx` contains the retained validation data and the added voltage-class workbooks.
 
 **Report:** A published summary is at `docs/EMBR_Cymcap_Validation_Report.pdf` (also linked from the app's About page).
 
@@ -200,11 +228,21 @@ The verification is implemented as `tb880_verification.py` (run `python tb880_ve
 
 EMBR configurations are saved as JSON files with the format identifier `gridworks-embr-config`. The frontend can also load legacy files with format identifiers `gridworks-amber-config` and `gridworks-ampacity-config`.
 
+## Runtime Configuration
+
+| Variable | Required | Description |
+|---|---:|---|
+| `PORT` | No | Listening port. Defaults to `8080` locally; Render supplies it automatically. |
+| `EMBR_ALLOWED_ORIGIN` | No | Enables CORS for one explicit origin. Unset means same-origin only. |
+
+`GET /healthz` returns a small JSON readiness response for platform health checks.
+
 ---
 
 ## Known Limitations
 
-- **MV cable library is fixed** to Priority Wire #4070-17 (35 kV AL TR-XLPE). Other MV cables would require adding entries to the `MV_CABLES` dict with full cable construction data.
+- **MV cable libraries are fixed** to the documented Southwire 15/25 kV and Priority Wire 35 kV constructions. Other MV cables require complete construction data in `MV_CABLES` and fresh engineering validation.
+- **15/25 kV Cymcap validation is pending.** Those libraries pass an independent term-by-term IEC 60287 cross-check, but the published 62-scenario Cymcap matrix covers the 35 kV library. Treat 15/25 kV outputs as engineering estimates until absolute validation is complete.
 - **Trefoil only** for MV — flat formation is not implemented.
 - **DC/LVAC direct burial mutual heating** uses the same geometric path-fraction model as the MV engine (splitting the image-method ray at the rectangular backfill boundary). This only activates when dryout is enabled; with dryout off, a uniform native resistivity is used for the full path.
 - **Conduit fill calculations** are approximate (31% for 1–2 cables, 40% for 3+). The frontend disables undersized conduit options but does not enforce NEC Chapter 9 exact fill tables.
@@ -213,6 +251,20 @@ EMBR configurations are saved as JSON files with the format identifier `gridwork
 ---
 
 ## Changelog
+
+### v1.2 — July 2026
+
+- Added 15 kV and 25 kV Southwire cable libraries alongside the existing 35 kV library.
+- Added selectable operating voltage with cable-class validation.
+- Added an independent term-by-term IEC 60287 cross-check for the 15/25 kV rating chain.
+- Preserved the validated 35 kV results; absolute Cymcap validation for the new voltage classes remains pending.
+
+### v1.1 — July 2026
+
+- Hardened API input validation, request body limits, error handling, static-file serving, and same-origin behavior.
+- Switched to a threaded HTTP server with request timeouts.
+- Added frontend integration coverage, latest-request-wins calculation updates, safer DOM rendering, and keyboard support for soil presets.
+- Added the home-page screenshot carousel.
 
 ### v1.0 — 2026 (Production release)
 
@@ -234,7 +286,7 @@ PDF report generation rewritten on ReportLab.
 - Installation cross-section now mirrors the on-screen interface (`drawXS` in `embr.html`) 1:1: the graphic is built in the same SVG coordinate space and uniformly scaled into the report, so proportions, scaling and element placement match the screen exactly. Cable, conductor and conduit colors are kept identical to the UI; only the background and accent colors are mapped to the print-friendly palette. The graphic box height follows the on-screen aspect ratio.
 - Long parameter values (e.g. LVAC cable labels) auto-shrink to stay within their column.
 - ReportLab is now a runtime dependency (PDF export only) and is imported lazily, so the calculation engines and HTTP server still run on the standard library alone; if ReportLab is absent, only PDF export is affected and it returns a clear error instead of failing to start. The CI deploy guard changed from "zero dependencies" to an explicit package allowlist so dependency creep stays a reviewed decision.
-- Azure deployment vendors dependencies: the workflow runs `pip install -r requirements.txt --target vendor` and ships `./vendor` with the app (App Service runs `python embr-server.py` with no platform build step). `embr-server.py` prepends `./vendor` to `sys.path` at startup. The CI Python version must match the App Service Python version (both 3.12, Linux x86_64) so the compiled Pillow wheel is compatible. `vendor/` is git-ignored and produced fresh on each deploy.
+- ReportLab became the sole runtime dependency for PDF export. The calculation engines and HTTP server remain standard-library-only.
 
 ### v0.3 — May 2026 (Validated Release)
 

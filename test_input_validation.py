@@ -216,6 +216,10 @@ def _get_status(path):
         return e.code
 check("GET / serves the app (200)", _get_status("/") == 200)
 check("GET /embr.html serves the app (200)", _get_status("/embr.html") == 200)
+st, h = _headers("GET", "healthz", api=False)
+check("GET /healthz returns 200 JSON for deployment health checks",
+      st == 200 and h.get_content_type() == "application/json",
+      "status=%s content-type=%r" % (st, h.get("Content-Type")))
 check("GET /docs/ directory listing is blocked (404)", _get_status("/docs/") == 404)
 check("GET /embr-server.py source is blocked (404)", _get_status("/embr-server.py") == 404)
 check("GET /requirements.txt is blocked (404)", _get_status("/requirements.txt") == 404)

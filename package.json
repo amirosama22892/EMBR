@@ -2,8 +2,10 @@
   "name": "embr-frontend-tests",
   "version": "1.0.0",
   "private": true,
-  "description": "jsdom integration tests for the EMBR frontend (embr.html). Not shipped to Azure; used by CI and local runs only.",
+  "description": "jsdom integration tests for the EMBR frontend (embr.html). Used by CI and local runs only.",
   "scripts": {
+    "prestart": "python3 -m pip install --user -r requirements.txt",
+    "start": "python3 embr-server.py",
     "test": "node test_frontend.js"
   },
   "devDependencies": {
