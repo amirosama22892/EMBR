@@ -676,42 +676,42 @@ function drawXS(o){
   var cCol=o.isCond?(o.ctk==='hdpe'?'#3a3a3a':'#6a6a6a'):'none';
   var cts=[];for(var i=0;i<nC;i++)cts.push({x:tx(i*sp),y:cY});
 
-  var s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+svgW+' '+svgH+'" style="background:#102B3F">';
-  s+='<defs><marker id="aD" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#56B9F2"/></marker>';
-  s+='<marker id="aU" markerWidth="6" markerHeight="4" refX="0" refY="2" orient="auto-start-reverse"><path d="M0,0 L6,2 L0,4" fill="#56B9F2"/></marker>';
-  s+='<marker id="aR" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#56B9F2"/></marker>';
-  s+='<marker id="aL" markerWidth="6" markerHeight="4" refX="0" refY="2" orient="auto-start-reverse"><path d="M0,0 L6,2 L0,4" fill="#56B9F2"/></marker></defs>';
-  s+='<rect x="0" y="0" width="'+svgW+'" height="'+gY+'" fill="#153C57"/>';
-  s+='<rect x="0" y="'+gY+'" width="'+svgW+'" height="'+(svgH-gY)+'" fill="#2B6688"/>';
-  s+='<line x1="0" y1="'+gY+'" x2="'+svgW+'" y2="'+gY+'" stroke="#56B9F2" stroke-width="2.5" opacity="0.95"/>';
-  s+='<text x="10" y="'+(gY-8)+'" font-size="11" fill="#B9E8FF" font-family="Exo 2,sans-serif" font-weight="600">GRADE</text>';
+  var s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+svgW+' '+svgH+'" style="background:#2A2520">';
+  s+='<defs><marker id="aD" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#FBB52B"/></marker>';
+  s+='<marker id="aU" markerWidth="6" markerHeight="4" refX="0" refY="2" orient="auto-start-reverse"><path d="M0,0 L6,2 L0,4" fill="#FBB52B"/></marker>';
+  s+='<marker id="aR" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#FBB52B"/></marker>';
+  s+='<marker id="aL" markerWidth="6" markerHeight="4" refX="0" refY="2" orient="auto-start-reverse"><path d="M0,0 L6,2 L0,4" fill="#FBB52B"/></marker></defs>';
+  s+='<rect x="0" y="0" width="'+svgW+'" height="'+gY+'" fill="#3A3530"/>';
+  s+='<rect x="0" y="'+gY+'" width="'+svgW+'" height="'+(svgH-gY)+'" fill="#5A4A3A"/>';
+  s+='<line x1="0" y1="'+gY+'" x2="'+svgW+'" y2="'+gY+'" stroke="#FBB52B" stroke-width="2.5" opacity="0.95"/>';
+  s+='<text x="10" y="'+(gY-8)+'" font-size="11" fill="#FBB52B" font-family="Exo 2,sans-serif" font-weight="600">GRADE</text>';
 
   if(nC>1){var ccY=(dP>0?cY-dP:cY-20)-16;
-    s+='<line x1="'+cts[0].x+'" y1="'+ccY+'" x2="'+cts[1].x+'" y2="'+ccY+'" stroke="#56B9F2" stroke-width="1.1" marker-end="url(#aR)" marker-start="url(#aL)" opacity="0.95"/>';
-    s+='<text x="'+((cts[0].x+cts[1].x)/2)+'" y="'+(ccY-6)+'" font-size="10" fill="#B9E8FF" font-family="Exo 2,sans-serif" text-anchor="middle">'+sp+'" c/c</text>';}
+    s+='<line x1="'+cts[0].x+'" y1="'+ccY+'" x2="'+cts[1].x+'" y2="'+ccY+'" stroke="#FBB52B" stroke-width="1.1" marker-end="url(#aR)" marker-start="url(#aL)" opacity="0.95"/>';
+    s+='<text x="'+((cts[0].x+cts[1].x)/2)+'" y="'+(ccY-6)+'" font-size="10" fill="#FBB52B" font-family="Exo 2,sans-serif" text-anchor="middle">'+sp+'" c/c</text>';}
 
   if(dP>0){for(var ci=0;ci<cts.length;ci++){var c=cts[ci];
-    s+='<rect x="'+(c.x-dP)+'" y="'+(c.y-dP)+'" width="'+(dP*2)+'" height="'+(dP*2)+'" fill="#56B9F2" fill-opacity="0.14" stroke="#8BD4FA" stroke-width="1.2" stroke-dasharray="5 3" stroke-opacity="0.8"/>';}}
+    s+='<rect x="'+(c.x-dP)+'" y="'+(c.y-dP)+'" width="'+(dP*2)+'" height="'+(dP*2)+'" fill="#A89060" fill-opacity="0.2" stroke="#FBB52B" stroke-width="1.2" stroke-dasharray="5 3" stroke-opacity="0.65"/>';}}
 
   var dx=tx(wL+4);
-  s+='<line x1="'+dx+'" y1="'+(gY+6)+'" x2="'+dx+'" y2="'+cY+'" stroke="#56B9F2" stroke-width="1.1" marker-end="url(#aD)" marker-start="url(#aU)" opacity="0.95"/>';
-  s+='<line x1="'+(dx-5)+'" y1="'+cY+'" x2="'+(dx+5)+'" y2="'+cY+'" stroke="#56B9F2" stroke-width="1.1" opacity="0.95"/>';
-  s+='<text x="'+(dx+8)+'" y="'+((gY+cY)/2+4)+'" font-size="10" fill="#B9E8FF" font-family="Exo 2,sans-serif">'+dep+'"</text>';
+  s+='<line x1="'+dx+'" y1="'+(gY+6)+'" x2="'+dx+'" y2="'+cY+'" stroke="#FBB52B" stroke-width="1.1" marker-end="url(#aD)" marker-start="url(#aU)" opacity="0.95"/>';
+  s+='<line x1="'+(dx-5)+'" y1="'+cY+'" x2="'+(dx+5)+'" y2="'+cY+'" stroke="#FBB52B" stroke-width="1.1" opacity="0.95"/>';
+  s+='<text x="'+(dx+8)+'" y="'+((gY+cY)/2+4)+'" font-size="10" fill="#FBB52B" font-family="Exo 2,sans-serif">'+dep+'"</text>';
 
   for(ci=0;ci<cts.length;ci++){var c=cts[ci];
     if(o.isCond){s+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+cOR+'" fill="none" stroke="'+cCol+'" stroke-width="'+Math.max(2,cW)+'"/>';
-      s+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+cIR+'" fill="#102B3F" fill-opacity="0.85"/>';}
+      s+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+cIR+'" fill="#2A2520" fill-opacity="0.85"/>';}
     for(var j=0;j<o.cables.length;j++){var cb=o.cables[j];var cx,cy;
       if(o.mode==='trefoil'&&cb.a!==undefined){cx=c.x+Math.cos(cb.a)*tRP;cy=c.y+Math.sin(cb.a)*tRP;}
       else{cx=c.x+(cb.dx||0)*cR*2;cy=c.y+(cb.dy||0)*cR*2;}
       s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+cR+'" fill="'+cb.c+'"/>';}
     var labY=c.y+(dP>0?dP:cR+6)+16;
-    s+='<text x="'+c.x+'" y="'+labY+'" font-size="11" fill="#B9E8FF" text-anchor="middle" font-family="Exo 2,sans-serif" font-weight="600">CKT '+(ci+1)+'</text>';}
+    s+='<text x="'+c.x+'" y="'+labY+'" font-size="11" fill="#FBB52B" text-anchor="middle" font-family="Exo 2,sans-serif" font-weight="600">CKT '+(ci+1)+'</text>';}
 
   var ly=svgH-40,lx=Math.max(8,tx(wL+2)),lw=o.leg.length*50+20;
   s+='<g transform="translate('+lx+','+ly+')">';
   for(var li=0;li<o.leg.length;li++){var px=14+li*50;
-    s+='<circle cx="'+px+'" cy="16" r="5" fill="'+o.leg[li].c+'"/><text x="'+(px+8)+'" y="20" font-size="9" fill="#D5F2FF" font-family="Exo 2,sans-serif" font-weight="600">'+o.leg[li].l+'</text>';}
+    s+='<circle cx="'+px+'" cy="16" r="5" fill="'+o.leg[li].c+'"/><text x="'+(px+8)+'" y="20" font-size="9" fill="#FBB52B" font-family="Exo 2,sans-serif" font-weight="600">'+o.leg[li].l+'</text>';}
   s+='</g></svg>';
   $('xsection').innerHTML=s;
 }
