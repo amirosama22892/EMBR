@@ -77,6 +77,9 @@ window.addEventListener("load", async () => {
       !window.document.body.textContent.includes('Gridworks'));
     check("new configuration exports use The Three Phase format",
       window.gatherCurrentConfig()._format === 'the-three-phase-ampacity-config');
+    check("cross-section uses the lighter high-contrast blue palette",
+      $("xsection").innerHTML.includes('#2B6688') &&
+      $("xsection").innerHTML.includes('#B9E8FF'));
 
     // ---- T2: module navigation ----
     window.showModule("about");
