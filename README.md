@@ -1,16 +1,16 @@
-# Gridworks EMBR
+# The Three Phase Ampacity Calculator
 
-**Engineered Model for Buried-cable Ratings**
+**Underground Cable Ampacity Calculator**
 
-EMBR is an in-house ampacity calculator for underground power cables. It implements the IEC 60287 / Neher-McGrath thermal circuit methodology in a lightweight Python server (standard library plus ReportLab for PDF export) with a browser-based frontend. Three calculation engines cover MV trefoil (15, 25, and 35 kV), DC (solar/battery), and LVAC (power feeders).
+The Three Phase Ampacity Calculator is an in-house tool for rating underground power cables. It implements the IEC 60287 / Neher-McGrath thermal circuit methodology in a lightweight Python server (standard library plus ReportLab for PDF export) with a browser-based frontend. Three calculation engines cover MV trefoil (15, 25, and 35 kV), DC (solar/battery), and LVAC (power feeders).
 
-EMBR is validated against Cymcap 8.1 Rev 2 across a 62-scenario matrix — 58 of 58 valid scenarios pass within ±5%, with the remaining 4 excluded due to confirmed Cymcap model errors (not EMBR errors).
+The calculator is validated against Cymcap 8.1 Rev 2 across a 62-scenario matrix — 58 of 58 valid scenarios pass within ±5%, with the remaining 4 excluded due to confirmed Cymcap model errors (not calculator errors).
 
 ---
 
 ## Quickstart
 
-EMBR supports Python 3.7+; Python 3.12 is the tested deployment version. The calculation engines and HTTP server use only the standard library; the PDF export endpoint uses ReportLab, the sole runtime dependency.
+The Ampacity Calculator supports Python 3.7+; Python 3.12 is the tested deployment version. The calculation engines and HTTP server use only the standard library; the PDF export endpoint uses ReportLab, the sole runtime dependency.
 
 ```
 pip install -r requirements.txt
@@ -29,7 +29,7 @@ npm ci
 npm test
 ```
 
-> **Note:** The header logo expects `gridworks_logo.png` in the same directory as `embr-server.py`. The app works fine without it — you just won't see the logo.
+> **Note:** The header logo expects `three_phase_logo.png` in the same directory as `embr-server.py`. The app works fine without it — you just won't see the logo.
 
 ---
 
@@ -41,7 +41,7 @@ EMBR/
 ├── embr.html                       # Single-file frontend (HTML/CSS/JS)
 ├── render.yaml                     # Render Blueprint
 ├── DEPLOYMENT.md                   # Render setup, smoke test, rollback, troubleshooting
-├── gridworks_logo.png              # Header logo
+├── three_phase_logo.png            # The Three Phase header logo
 ├── favicon.ico                     # Icon for browser tab
 ├── requirements.txt                # Runtime dependency list
 ├── test_input_validation.py        # HTTP/API regression suite
@@ -201,14 +201,14 @@ The 4 excluded scenarios have confirmed Cymcap model setup errors (wrong conduit
 
 **Report:** A published summary is at `docs/EMBR_Cymcap_Validation_Report.pdf` (also linked from the app's About page).
 
-**Unit note:** Soil resistivity in the validation matrix is in C·cm/W. EMBR internally uses K·m/W (divide by 100). The frontend performs this conversion automatically.
+**Unit note:** Soil resistivity in the validation matrix is in C·cm/W. The calculator internally uses K·m/W (divide by 100). The frontend performs this conversion automatically.
 
 ### CIGRE TB 880 verification
 
-EMBR's IEC 60287 engine is additionally verified against CIGRE Technical Brochure 880 (2022), *Power cable rating examples for calculation tool verification*, which publishes fully worked IEC 60287 examples including every intermediate value. For the case studies within EMBR's single-core / trefoil / direct-buried domain, EMBR reproduces the published values to their full precision:
+The calculator's IEC 60287 engine is additionally verified against CIGRE Technical Brochure 880 (2022), *Power cable rating examples for calculation tool verification*, which publishes fully worked IEC 60287 examples including every intermediate value. For the case studies within the calculator's single-core / trefoil / direct-buried domain, it reproduces the published values to their full precision:
 
 - **Case 4 (33 kV land cable)** — full current rating reproduced end-to-end (conductor AC resistance, dielectric loss, screen loss factor, T1–T4, and the 537.5 A rating) to within 1×10⁻⁶ %.
-- **Case 1 (132 kV trefoil)** — the IEC 60287 conductor-loss core reproduced exactly. Case 1's full thermal/shield chain (laminated foil, Milliken conductor) uses constructions outside EMBR's cable families, so only its loss core is verified.
+- **Case 1 (132 kV trefoil)** — the IEC 60287 conductor-loss core reproduced exactly. Case 1's full thermal/shield chain (laminated foil, Milliken conductor) uses constructions outside the calculator's cable families, so only its loss core is verified.
 
 The verification is implemented as `tb880_verification.py` (run `python tb880_verification.py`) and executes in CI on every deploy. The full report is at `docs/EMBR_TB880_Verification_Report.pdf`. Only TB 880's numeric reference values are used (CIGRE copyright); the brochure text is not reproduced.
 
@@ -226,7 +226,7 @@ The verification is implemented as `tb880_verification.py` (run `python tb880_ve
 
 ## Configuration Files
 
-EMBR configurations are saved as JSON files with the format identifier `gridworks-embr-config`. The frontend can also load legacy files with format identifiers `gridworks-amber-config` and `gridworks-ampacity-config`.
+New configurations are saved as JSON files with the format identifier `the-three-phase-ampacity-config`. The frontend continues to load legacy files with the `gridworks-embr-config`, `gridworks-amber-config`, and `gridworks-ampacity-config` identifiers.
 
 ## Runtime Configuration
 
@@ -268,7 +268,7 @@ EMBR configurations are saved as JSON files with the format identifier `gridwork
 
 ### v1.0 — 2026 (Production release)
 
-First production-ready release; EMBR leaves beta.
+First production-ready release; the calculator leaves beta.
 
 - New home page and module navigation: **Calculator** (the tool), **About** (description, engines, methodology, and the Cymcap and CIGRE TB 880 validation documents), and **Release Notes** (version history).
 - Independent verification against **CIGRE TB 880** added: `tb880_verification.py` reproduces the published reference values for the in-domain cases (full Case 4 rating; Case 1 loss core), runs in CI on every deploy, and is documented in `docs/EMBR_TB880_Verification_Report.pdf`.
@@ -279,7 +279,7 @@ First production-ready release; EMBR leaves beta.
 PDF report generation rewritten on ReportLab.
 
 - Cross-section grade and depth view is now consistent across MV, DC and LVAC. The on-screen diagram's world extents use a fixed margin independent of the dry-out zone, so the grade line and depth dimension render identically whether dry-out is on or off and regardless of which tool is selected.
-- Browser tab title reflects the selected tool ("MV | EMBR", "DC | EMBR", "LVAC | EMBR").
+- Browser tab title reflects the selected tool (for example, "MV | Ampacity Calculator").
 - Added IEEE 442 soil/backfill presets (Natural Sand, Silty Clay, Crushed Stone) as dropdown options directly on the Native Soil ρ and Dry-Out Zone ρ fields of each tool. The Native field offers 2%-moisture values and the Dry-Out field offers 0%-moisture values (read from IEEE 442 Fig. 2). Choosing a preset in either field auto-fills the paired field with the same soil's other value; both fields remain free-entry, and a typed custom value leaves the paired field untouched.
 - Replaced the hand-rolled raw-PDF writer (`_PDFWriter`) with a thin top-left-origin canvas wrapper (`_Canvas`) over ReportLab, cutting ~700 lines of byte-level PDF code and using real font metrics instead of approximated text widths.
 - Report layout is a faithful reproduction of the previous one-page study; no content or section changes.

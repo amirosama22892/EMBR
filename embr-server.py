@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Gridworks EMBR — Engineered Model for Buried-cable Ratings
+The Three Phase Ampacity Calculator
 ====================================================================
 Multi-system: MV Trefoil, DC, LVAC
 IEC 60287 / Neher-McGrath methodology
@@ -1712,7 +1712,7 @@ class _Canvas:
         self.w, self.h = letter  # (612, 792)
         self._buf = io.BytesIO()
         self.c = canvas.Canvas(self._buf, pagesize=letter)
-        self.c.setTitle("Gridworks EMBR Ampacity Study Report")
+        self.c.setTitle("The Three Phase Ampacity Study Report")
         self._font = "Helvetica"
         self._size = 10
 
@@ -1792,9 +1792,9 @@ def _hex(h):
 
 # Print-friendly palette
 _C = {
-    "brand":  _hex('#D4920A'),   # dark gold for headers
-    "accent": _hex('#E8A400'),   # slightly brighter for lines
-    "orange": _hex('#C06010'),   # section headers
+    "brand":  _hex('#07508A'),   # logo blue for headers
+    "accent": _hex('#2F8FD6'),   # brighter blue for lines
+    "orange": _hex('#07508A'),   # section headers
     "dark":   (0.12, 0.12, 0.14),
     "text":   (0.15, 0.15, 0.17),
     "gray":   (0.45, 0.44, 0.42),
@@ -2045,10 +2045,10 @@ def generate_pdf_report(params, result, project_info):
         pdf.rect_fill(0, 0, W, 3)
         pdf.set_font("Helvetica-Bold", 20)
         pdf.set_color(*_C["brand"])
-        pdf.text(M, 28, "Gridworks EMBR")
+        pdf.text(M, 28, "The Three Phase | Ampacity Calculator")
         pdf.set_font("Helvetica", 9)
         pdf.set_color(*_C["gray"])
-        pdf.text(M, 42, "Engineered Model for Buried-cable Ratings  |  v1.2  |  IEC 60287 / Neher-McGrath")
+        pdf.text(M, 42, "Underground Cable Ratings  |  v1.2  |  IEC 60287 / Neher-McGrath")
         pdf.set_font("Helvetica-Bold", 11)
         pdf.set_color(*_C["dark"])
         pdf.text_right(W - M, 22, "AMPACITY STUDY REPORT")
@@ -2267,7 +2267,7 @@ def generate_pdf_report(params, result, project_info):
         pdf.rect_fill(M, 762, CW, 0.5)
         pdf.set_font("Helvetica", 6.5)
         pdf.set_color(*_C["ltgray"])
-        pdf.text(M, 773, "Gridworks EMBR  |  www.gridworks.energy  |  IEC 60287 / Neher-McGrath  |  Soil data: Open-Meteo.com")
+        pdf.text(M, 773, "The Three Phase  |  Ampacity Calculator  |  IEC 60287 / Neher-McGrath  |  Soil data: Open-Meteo.com")
         pdf.text_right(W - M, 773, f"Generated {now}")
 
         return pdf.build()
@@ -2384,7 +2384,7 @@ def validate_params(params):
 class AmpacityHandler(SimpleHTTPRequestHandler):
 
     # Avoid advertising the host Python version in the Server header.
-    server_version = "EMBR/1.2"
+    server_version = "AmpacityCalculator/1.2"
     sys_version = ""
 
     def __init__(self, *args, **kwargs):
@@ -2497,7 +2497,7 @@ class AmpacityHandler(SimpleHTTPRequestHandler):
 
     # Only these paths are served; everything else (source, configs, listings)
     # returns 404 so the app dir's non-asset files stay private. (review BE-3)
-    _STATIC_ALLOW = {"/embr.html", "/gridworks_logo.png", "/favicon.ico"}
+    _STATIC_ALLOW = {"/embr.html", "/three_phase_logo.png", "/favicon.ico"}
 
     def _resolve_static(self):
         """Return the servable path for a GET, or None if it is not allowed."""
@@ -2573,11 +2573,11 @@ if __name__ == "__main__":
     AmpacityHandler.timeout = 30
     httpd = ThreadingHTTPServer(("", PORT), AmpacityHandler)
     httpd.daemon_threads = True
-    print(f"EMBR server running on port {PORT}")
+    print(f"Ampacity Calculator server running on port {PORT}")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
-        print("\nEMBR server stopped")
+        print("\nAmpacity Calculator server stopped")
     finally:
         httpd.server_close()
 

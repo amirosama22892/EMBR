@@ -3,16 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MV | EMBR</title>
+<title>MV | Ampacity Calculator</title>
+<link rel="icon" type="image/png" href="/three_phase_logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--gw-yellow:#FBB52B;--gw-orange:#F07A1A;--bg-dark:#1a1b1e;--bg-panel:#25262b;--bg-card:#2c2d33;--bg-input:#33343a;--border:#3a3b42;--text-primary:#e8e6e1;--text-secondary:#9a9890;--text-muted:#6b6960}
+:root{--gw-yellow:#2F8FD6;--gw-orange:#07508A;--bg-dark:#06131F;--bg-panel:#0B2032;--bg-card:#112A40;--bg-input:#17354E;--border:#24506E;--text-primary:#F2F8FC;--text-secondary:#AEC7D9;--text-muted:#7898AE}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Exo 2',system-ui,sans-serif;background:var(--bg-dark);color:var(--text-primary)}
-.header{background:var(--bg-panel);border-bottom:1px solid var(--border);padding:16px 0}
+.header{background:linear-gradient(135deg,#063B69 0%,#07508A 50%,#0B2032 100%);border-bottom:1px solid var(--border);padding:10px 0}
 .header-inner{max-width:960px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
 .header-left{display:flex;align-items:center;gap:16px}
-.logo-img{height:40px;object-fit:contain}
+.logo-img{height:68px;width:auto;object-fit:contain;border-radius:6px}
 .header-divider{width:1px;height:32px;background:var(--border)}
 .header-title{font-size:14px;font-weight:600;color:var(--text-secondary)}
 .header-version{font-size:11px;color:var(--text-muted)}
@@ -20,13 +21,13 @@ body{font-family:'Exo 2',system-ui,sans-serif;background:var(--bg-dark);color:va
 .sys-tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--bg-panel);padding:4px;border-radius:10px;border:1px solid var(--border)}
 .sys-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;color:var(--text-muted);background:transparent;border:none;border-radius:8px;cursor:pointer;font-family:'Exo 2',system-ui,sans-serif}
 .sys-tab:hover{color:var(--text-secondary);background:var(--bg-card)}
-.sys-tab.active{color:#1C1B1A;background:var(--gw-yellow)}
+.sys-tab.active{color:#fff;background:var(--gw-yellow)}
 .sys-tab .tab-sub{font-size:10px;font-weight:400;opacity:0.7;display:block;margin-top:2px}
 .project-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px}
 .project-field{display:flex;flex-direction:column;gap:3px}
 .project-field label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
 .project-field input{background:var(--bg-input);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;color:var(--text-primary);font-family:'Exo 2',system-ui,sans-serif}
-.project-field input:focus{outline:none;border-color:var(--gw-yellow);box-shadow:0 0 0 2px rgba(251,181,43,.2)}
+.project-field input:focus{outline:none;border-color:var(--gw-yellow);box-shadow:0 0 0 2px rgba(47,143,214,.25)}
 .project-field input::placeholder{color:var(--text-muted)}
 .xsection{margin-bottom:20px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
 .xsection svg{display:block;width:100%}
@@ -39,7 +40,7 @@ body{font-family:'Exo 2',system-ui,sans-serif;background:var(--bg-dark);color:va
 .field-row{display:flex;align-items:center;gap:8px}
 .field input,.field select{width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;font-size:14px;color:var(--text-primary);font-family:'Exo 2',system-ui,sans-serif}
 .field select{appearance:auto;cursor:pointer}
-.field input:focus,.field select:focus{outline:none;border-color:var(--gw-yellow);box-shadow:0 0 0 2px rgba(251,181,43,.2)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gw-yellow);box-shadow:0 0 0 2px rgba(47,143,214,.25)}
 .field .unit{font-size:12px;color:var(--text-muted);white-space:nowrap;min-width:50px}
 input.nospin::-webkit-inner-spin-button,input.nospin::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 input.nospin{-moz-appearance:textfield;appearance:textfield}
@@ -71,15 +72,15 @@ input.nospin{-moz-appearance:textfield;appearance:textfield}
 .detail-card .dl{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
 .detail-card .dv{font-size:15px;font-weight:600;color:var(--text-primary);margin-top:2px}
 .btn{padding:9px 20px;font-size:13px;font-weight:600;border:none;border-radius:6px;cursor:pointer;font-family:'Exo 2',system-ui,sans-serif;transition:.15s}
-.btn-accent{background:var(--gw-yellow);color:#1C1B1A}.btn-accent:hover{background:var(--gw-orange)}
-.btn-outline{background:transparent;color:var(--gw-yellow);border:1px solid var(--gw-yellow)}.btn-outline:hover{background:rgba(251,181,43,.15)}
+.btn-accent{background:var(--gw-yellow);color:#fff}.btn-accent:hover{background:#1978BC}
+.btn-outline{background:transparent;color:var(--gw-yellow);border:1px solid var(--gw-yellow)}.btn-outline:hover{background:rgba(47,143,214,.15)}
 .btn-green{background:#2d6a30;color:#fff}.btn-green:hover{background:#358438}
 .btn-red{background:#6a2222;color:#fff;font-size:11px;padding:5px 10px}.btn-red:hover{background:#8a3333}
 .btn-row{display:flex;gap:10px;flex-wrap:wrap}
 .config-panel{background:var(--bg-panel);border-radius:10px;padding:18px;margin-bottom:20px;border:1px solid var(--border)}
 .config-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .config-bar input[type="text"]{flex:1;min-width:180px;padding:8px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text-primary);font-family:'Exo 2',system-ui,sans-serif}
-.config-bar input[type="text"]:focus{outline:none;border-color:var(--gw-yellow);box-shadow:0 0 0 2px rgba(251,181,43,.2)}
+.config-bar input[type="text"]:focus{outline:none;border-color:var(--gw-yellow);box-shadow:0 0 0 2px rgba(47,143,214,.25)}
 .config-bar input[type="text"]::placeholder{color:var(--text-muted)}
 .panel-title-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .panel-title-row .panel-title{margin-bottom:0}
@@ -91,7 +92,7 @@ input.nospin{-moz-appearance:textfield;appearance:textfield}
 .notice{margin-top:16px;padding:14px 18px;background:var(--bg-panel);border-radius:10px;font-size:11px;color:var(--text-muted);border:1px solid var(--border);line-height:1.7}
 .notice strong{color:var(--gw-yellow)}
 @media(max-width:700px){.cols{grid-template-columns:1fr}.detail-grid{grid-template-columns:repeat(2,1fr)}.project-bar{grid-template-columns:1fr}.sys-tabs{flex-direction:column}}
-.ver-badge{font-size:11px;font-weight:700;color:#1C1B1A;background:var(--gw-yellow);padding:3px 10px;border-radius:4px;letter-spacing:1px}
+.ver-badge{font-size:11px;font-weight:700;color:#fff;background:var(--gw-yellow);padding:3px 10px;border-radius:4px;letter-spacing:1px}
 .nav{background:var(--bg-panel);border-bottom:1px solid var(--border)}
 .nav-inner{max-width:960px;margin:0 auto;padding:0 20px;display:flex;gap:2px;flex-wrap:wrap}
 .nav-btn{padding:13px 18px;font-size:13px;font-weight:600;color:var(--text-muted);background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:'Exo 2',system-ui,sans-serif}
@@ -147,9 +148,9 @@ input.nospin{-moz-appearance:textfield;appearance:textfield}
 </head>
 <body>
 <div class="header"><div class="header-inner"><div class="header-left">
-<img src="/gridworks_logo.png" alt="Gridworks" class="logo-img">
+<img src="/three_phase_logo.png" alt="The Three Phase" class="logo-img">
 <div class="header-divider"></div>
-<div><div class="header-title">EMBR</div><div class="header-version">Engineered Model for Buried-cable Ratings · v1.2 · IEC 60287 / Neher-McGrath</div></div>
+<div><div class="header-title">Ampacity Calculator</div><div class="header-version">The Three Phase · v1.2 · IEC 60287 / Neher-McGrath</div></div>
 </div><div class="ver-badge">v1.2</div></div></div>
 <div class="nav"><div class="nav-inner">
 <button class="nav-btn active" id="nav-home" onclick="showModule('home')">Home</button>
@@ -303,8 +304,8 @@ input.nospin{-moz-appearance:textfield;appearance:textfield}
 
 <div class="wrap module" id="mod-home">
 <div class="home-hero">
-<h1>Gridworks EMBR</h1>
-<div class="sub">Engineered Model for Buried-cable Ratings</div>
+<h1>Ampacity Calculator</h1>
+<div class="sub">The Three Phase</div>
 <div class="meta">v1.2 · IEC 60287 / Neher–McGrath ampacity for underground power cables</div>
 <div class="badge-row">
 <span class="vbadge">Validated vs <strong>Cymcap 8.1</strong></span>
@@ -314,12 +315,12 @@ input.nospin{-moz-appearance:textfield;appearance:textfield}
 </div>
 <div class="card-grid">
 <div class="mod-card" onclick="showModule('calculator')"><h3>Calculator</h3><p>Size underground MV, DC and LVAC cables by IEC 60287 / Neher–McGrath. Live cross-section, IEEE 442 soil presets, and one-page PDF study reports.</p><span class="arrow">Open calculator →</span></div>
-<div class="mod-card" onclick="showModule('about')"><h3>About</h3><p>What EMBR is, the three calculation engines, the methodology, and the Cymcap and CIGRE TB 880 validation documents.</p><span class="arrow">Learn more →</span></div>
+<div class="mod-card" onclick="showModule('about')"><h3>About</h3><p>How the Ampacity Calculator works, its three calculation engines, the methodology, and the Cymcap and CIGRE TB 880 validation documents.</p><span class="arrow">Learn more →</span></div>
 <div class="mod-card" onclick="showModule('releasenotes')"><h3>Release Notes</h3><p>Version history and what changed in each release, from the initial beta through the latest release.</p><span class="arrow">View history →</span></div>
 </div>
 <div class="home-shots" id="homeShots" style="display:none">
-<h4>EMBR in action</h4>
-<div class="carousel" id="homeCarousel" role="group" aria-roledescription="carousel" aria-label="Screenshots of EMBR cross-sections">
+<h4>Ampacity Calculator in action</h4>
+<div class="carousel" id="homeCarousel" role="group" aria-roledescription="carousel" aria-label="Screenshots of Ampacity Calculator cross-sections">
 <div class="carousel-viewport" id="carouselViewport"></div>
 <button type="button" class="carousel-nav prev" id="carPrev" aria-label="Previous slide" onclick="carMove(-1)">&#8249;</button>
 <button type="button" class="carousel-nav next" id="carNext" aria-label="Next slide" onclick="carMove(1)">&#8250;</button>
@@ -330,8 +331,8 @@ input.nospin{-moz-appearance:textfield;appearance:textfield}
 
 <div class="wrap module" id="mod-about">
 <div class="content">
-<h2>About EMBR</h2>
-<p>EMBR (Engineered Model for Buried-cable Ratings) is an in-house ampacity calculator for underground power cables. It implements the IEC 60287 / Neher–McGrath thermal-circuit methodology in a lightweight, zero-configuration browser tool, with three calculation engines covering the cable systems Gridworks designs most often.</p>
+<h2>About the Ampacity Calculator</h2>
+<p>The Three Phase Ampacity Calculator is an in-house tool for rating underground power cables. It implements the IEC 60287 / Neher–McGrath thermal-circuit methodology in a lightweight, zero-configuration browser tool, with three calculation engines covering the cable systems The Three Phase designs most often.</p>
 <h3>Calculation engines</h3>
 <ul>
 <li><strong>MV Trefoil (15 / 25 / 35 kV)</strong> — 15, 25, and 35 kV TR-XLPE aluminium cables in touching trefoil, direct-buried or in conduit, at a user-selectable operating voltage. Full IEC 60287 loss model: skin and proximity effects, concentric-neutral shield loss, dielectric loss, and a two-zone dry-out external thermal resistance.</li>
@@ -339,13 +340,13 @@ input.nospin{-moz-appearance:textfield;appearance:textfield}
 <li><strong>LVAC</strong> — low-voltage AC feeders with configurable phase topology (single-phase, split-phase, three-phase delta or wye).</li>
 </ul>
 <h3>Validation</h3>
-<p>EMBR is validated against two independent references: Cymcap 8.1 Rev 2 (a 62-scenario matrix; 58 of 58 valid scenarios within ±5%) and CIGRE Technical Brochure 880 (2022), the industry reference for verifying cable-rating tools. Against TB 880, EMBR's IEC 60287 engine reproduces the published reference values to their full precision, including the complete Case 4 (33 kV) current rating.</p>
+<p>The Ampacity Calculator is validated against two independent references: Cymcap 8.1 Rev 2 (a 62-scenario matrix; 58 of 58 valid scenarios within ±5%) and CIGRE Technical Brochure 880 (2022), the industry reference for verifying cable-rating tools. Against TB 880, the IEC 60287 engine reproduces the published reference values to their full precision, including the complete Case 4 (33 kV) current rating.</p>
 <p style="font-size:12px;color:var(--text-muted)">The Cymcap matrix was run at 35 kV. TB 880 contains no 15 kV or 25 kV single-core case, so the new libraries (Southwire SPEC 81102 / 81142) are instead cross-checked by an independent IEC 60287 recomputation that reproduces their full rating chain — R_ac, dielectric loss, T1/T3/T4, shield loss, and ampacity — term-by-term, run automatically in CI. Absolute validation against Cymcap at 15 kV / 25 kV is still pending, so treat those results as engineering estimates until that validation is complete.</p>
 <div class="doc-links">
-<a class="doc-link" href="/docs/EMBR_TB880_Verification_Report.pdf" target="_blank"><span class="ic">📄</span><span>CIGRE TB 880 Verification Report<span class="dl-sub">PDF · EMBR vs TB 880 Cases 1 &amp; 4</span></span></a>
+<a class="doc-link" href="/docs/EMBR_TB880_Verification_Report.pdf" target="_blank"><span class="ic">📄</span><span>CIGRE TB 880 Verification Report<span class="dl-sub">PDF · Calculator vs TB 880 Cases 1 &amp; 4</span></span></a>
 <a class="doc-link" href="/docs/EMBR_Cymcap_Validation_Report.pdf" target="_blank"><span class="ic">📄</span><span>Cymcap 8.1 Validation Report<span class="dl-sub">PDF · 58/58 scenarios within ±5%</span></span></a>
 </div>
-<p style="font-size:12px;color:var(--text-muted)">Methodology: IEC 60287-1-1 and IEC 60287-2-1; Neher–McGrath (1957). CIGRE TB 880 is CIGRE copyright; EMBR's verification uses only the published numeric reference values.</p>
+<p style="font-size:12px;color:var(--text-muted)">Methodology: IEC 60287-1-1 and IEC 60287-2-1; Neher–McGrath (1957). CIGRE TB 880 is CIGRE copyright; the verification uses only the published numeric reference values.</p>
 </div>
 </div>
 
@@ -375,7 +376,7 @@ input.nospin{-moz-appearance:textfield;appearance:textfield}
 <li>New home page with Calculator, About, and Release Notes modules.</li>
 <li>Independent verification against CIGRE TB 880 added — in-app report on the About page and an automated regression check in CI.</li>
 <li>IEEE 442 soil-resistivity presets selectable directly on the Native Soil and Dry-Out Zone fields.</li>
-<li>First production-ready release — EMBR leaves beta.</li>
+<li>First production-ready release — the calculator leaves beta.</li>
 </ul>
 </div>
 <div class="release"><h3>v0.5</h3><div class="date">June 2026</div>
@@ -497,14 +498,14 @@ function showModule(name){
     var el=$('mod-'+mods[i]); if(el)el.style.display=(mods[i]===name)?'':'none';
     var nb=$('nav-'+mods[i]); if(nb)nb.classList.toggle('active',mods[i]===name);
   }
-  if(name==='calculator')document.title=({mv:'MV',dc:'DC',lvac:'LVAC'}[currentSystem]||'')+' | EMBR';
-  else document.title=({home:'EMBR',about:'About · EMBR',releasenotes:'Release Notes · EMBR'}[name])||'EMBR';
+  if(name==='calculator')document.title=({mv:'MV',dc:'DC',lvac:'LVAC'}[currentSystem]||'')+' | Ampacity Calculator';
+  else document.title=({home:'Ampacity Calculator',about:'About · Ampacity Calculator',releasenotes:'Release Notes · Ampacity Calculator'}[name])||'Ampacity Calculator';
   window.scrollTo(0,0);
 }
 
 function setSystem(sys){
   currentSystem=sys;
-  document.title=({mv:'MV',dc:'DC',lvac:'LVAC'}[sys]||'')+' | EMBR';
+  document.title=({mv:'MV',dc:'DC',lvac:'LVAC'}[sys]||'')+' | Ampacity Calculator';
   var tabs=document.querySelectorAll('.sys-tab');
   for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');
   $('tab-'+sys).classList.add('active');
@@ -675,42 +676,42 @@ function drawXS(o){
   var cCol=o.isCond?(o.ctk==='hdpe'?'#3a3a3a':'#6a6a6a'):'none';
   var cts=[];for(var i=0;i<nC;i++)cts.push({x:tx(i*sp),y:cY});
 
-  var s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+svgW+' '+svgH+'" style="background:#2a2520">';
-  s+='<defs><marker id="aD" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#FBB52B"/></marker>';
-  s+='<marker id="aU" markerWidth="6" markerHeight="4" refX="0" refY="2" orient="auto-start-reverse"><path d="M0,0 L6,2 L0,4" fill="#FBB52B"/></marker>';
-  s+='<marker id="aR" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#FBB52B"/></marker>';
-  s+='<marker id="aL" markerWidth="6" markerHeight="4" refX="0" refY="2" orient="auto-start-reverse"><path d="M0,0 L6,2 L0,4" fill="#FBB52B"/></marker></defs>';
-  s+='<rect x="0" y="0" width="'+svgW+'" height="'+gY+'" fill="#3a3530" opacity="0.5"/>';
-  s+='<rect x="0" y="'+gY+'" width="'+svgW+'" height="'+(svgH-gY)+'" fill="#5a4a3a"/>';
-  s+='<line x1="0" y1="'+gY+'" x2="'+svgW+'" y2="'+gY+'" stroke="#FBB52B" stroke-width="2" opacity="0.6"/>';
-  s+='<text x="10" y="'+(gY-8)+'" font-size="11" fill="#FBB52B" font-family="Exo 2,sans-serif" opacity="0.8">GRADE</text>';
+  var s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+svgW+' '+svgH+'" style="background:#071827">';
+  s+='<defs><marker id="aD" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#2F8FD6"/></marker>';
+  s+='<marker id="aU" markerWidth="6" markerHeight="4" refX="0" refY="2" orient="auto-start-reverse"><path d="M0,0 L6,2 L0,4" fill="#2F8FD6"/></marker>';
+  s+='<marker id="aR" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#2F8FD6"/></marker>';
+  s+='<marker id="aL" markerWidth="6" markerHeight="4" refX="0" refY="2" orient="auto-start-reverse"><path d="M0,0 L6,2 L0,4" fill="#2F8FD6"/></marker></defs>';
+  s+='<rect x="0" y="0" width="'+svgW+'" height="'+gY+'" fill="#0C2A40" opacity="0.65"/>';
+  s+='<rect x="0" y="'+gY+'" width="'+svgW+'" height="'+(svgH-gY)+'" fill="#16415D"/>';
+  s+='<line x1="0" y1="'+gY+'" x2="'+svgW+'" y2="'+gY+'" stroke="#2F8FD6" stroke-width="2" opacity="0.7"/>';
+  s+='<text x="10" y="'+(gY-8)+'" font-size="11" fill="#78C5F4" font-family="Exo 2,sans-serif" opacity="0.9">GRADE</text>';
 
   if(nC>1){var ccY=(dP>0?cY-dP:cY-20)-16;
-    s+='<line x1="'+cts[0].x+'" y1="'+ccY+'" x2="'+cts[1].x+'" y2="'+ccY+'" stroke="#FBB52B" stroke-width="0.8" marker-end="url(#aR)" marker-start="url(#aL)" opacity="0.7"/>';
-    s+='<text x="'+((cts[0].x+cts[1].x)/2)+'" y="'+(ccY-6)+'" font-size="9" fill="#FBB52B" font-family="Exo 2,sans-serif" text-anchor="middle" opacity="0.8">'+sp+'" c/c</text>';}
+    s+='<line x1="'+cts[0].x+'" y1="'+ccY+'" x2="'+cts[1].x+'" y2="'+ccY+'" stroke="#2F8FD6" stroke-width="0.8" marker-end="url(#aR)" marker-start="url(#aL)" opacity="0.8"/>';
+    s+='<text x="'+((cts[0].x+cts[1].x)/2)+'" y="'+(ccY-6)+'" font-size="9" fill="#78C5F4" font-family="Exo 2,sans-serif" text-anchor="middle" opacity="0.9">'+sp+'" c/c</text>';}
 
   if(dP>0){for(var ci=0;ci<cts.length;ci++){var c=cts[ci];
-    s+='<rect x="'+(c.x-dP)+'" y="'+(c.y-dP)+'" width="'+(dP*2)+'" height="'+(dP*2)+'" fill="#a89060" fill-opacity="0.2" stroke="#FBB52B" stroke-width="1" stroke-dasharray="5 3" stroke-opacity="0.4"/>';}}
+    s+='<rect x="'+(c.x-dP)+'" y="'+(c.y-dP)+'" width="'+(dP*2)+'" height="'+(dP*2)+'" fill="#2F8FD6" fill-opacity="0.12" stroke="#2F8FD6" stroke-width="1" stroke-dasharray="5 3" stroke-opacity="0.5"/>';}}
 
   var dx=tx(wL+4);
-  s+='<line x1="'+dx+'" y1="'+(gY+6)+'" x2="'+dx+'" y2="'+cY+'" stroke="#FBB52B" stroke-width="0.8" marker-end="url(#aD)" marker-start="url(#aU)" opacity="0.7"/>';
-  s+='<line x1="'+(dx-5)+'" y1="'+cY+'" x2="'+(dx+5)+'" y2="'+cY+'" stroke="#FBB52B" stroke-width="0.8" opacity="0.7"/>';
-  s+='<text x="'+(dx+7)+'" y="'+((gY+cY)/2+4)+'" font-size="9" fill="#FBB52B" font-family="Exo 2,sans-serif" opacity="0.8">'+dep+'"</text>';
+  s+='<line x1="'+dx+'" y1="'+(gY+6)+'" x2="'+dx+'" y2="'+cY+'" stroke="#2F8FD6" stroke-width="0.8" marker-end="url(#aD)" marker-start="url(#aU)" opacity="0.8"/>';
+  s+='<line x1="'+(dx-5)+'" y1="'+cY+'" x2="'+(dx+5)+'" y2="'+cY+'" stroke="#2F8FD6" stroke-width="0.8" opacity="0.8"/>';
+  s+='<text x="'+(dx+7)+'" y="'+((gY+cY)/2+4)+'" font-size="9" fill="#78C5F4" font-family="Exo 2,sans-serif" opacity="0.9">'+dep+'"</text>';
 
   for(ci=0;ci<cts.length;ci++){var c=cts[ci];
     if(o.isCond){s+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+cOR+'" fill="none" stroke="'+cCol+'" stroke-width="'+Math.max(2,cW)+'"/>';
-      s+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+cIR+'" fill="#2a2520" fill-opacity="0.6"/>';}
+      s+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+cIR+'" fill="#071827" fill-opacity="0.75"/>';}
     for(var j=0;j<o.cables.length;j++){var cb=o.cables[j];var cx,cy;
       if(o.mode==='trefoil'&&cb.a!==undefined){cx=c.x+Math.cos(cb.a)*tRP;cy=c.y+Math.sin(cb.a)*tRP;}
       else{cx=c.x+(cb.dx||0)*cR*2;cy=c.y+(cb.dy||0)*cR*2;}
       s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+cR+'" fill="'+cb.c+'"/>';}
     var labY=c.y+(dP>0?dP:cR+6)+16;
-    s+='<text x="'+c.x+'" y="'+labY+'" font-size="10" fill="#FBB52B" text-anchor="middle" font-family="Exo 2,sans-serif" font-weight="600" opacity="0.9">CKT '+(ci+1)+'</text>';}
+    s+='<text x="'+c.x+'" y="'+labY+'" font-size="10" fill="#78C5F4" text-anchor="middle" font-family="Exo 2,sans-serif" font-weight="600" opacity="0.95">CKT '+(ci+1)+'</text>';}
 
   var ly=svgH-40,lx=Math.max(8,tx(wL+2)),lw=o.leg.length*50+20;
   s+='<g transform="translate('+lx+','+ly+')">';
   for(var li=0;li<o.leg.length;li++){var px=14+li*50;
-    s+='<circle cx="'+px+'" cy="16" r="5" fill="'+o.leg[li].c+'"/><text x="'+(px+8)+'" y="20" font-size="8" fill="#FBB52B" font-family="Exo 2,sans-serif" font-weight="600">'+o.leg[li].l+'</text>';}
+    s+='<circle cx="'+px+'" cy="16" r="5" fill="'+o.leg[li].c+'"/><text x="'+(px+8)+'" y="20" font-size="8" fill="#78C5F4" font-family="Exo 2,sans-serif" font-weight="600">'+o.leg[li].l+'</text>';}
   s+='</g></svg>';
   $('xsection').innerHTML=s;
 }
@@ -999,7 +1000,7 @@ function exportPDF(){
 
 function gatherCurrentConfig(){
   var cfg={
-    _format:'gridworks-embr-config',
+    _format:'the-three-phase-ampacity-config',
     _version:'1.2',
     configName:$('configName').value||'Unnamed',
     systemType:currentSystem,
@@ -1055,7 +1056,7 @@ function saveConfigFile(){
   var a=document.createElement('a');
   a.href=url;
   var safeName=name.replace(/[^a-zA-Z0-9_\- ]/g,'').replace(/\s+/g,'_');
-  a.download='gw_config_'+safeName+'_'+new Date().toISOString().slice(0,10)+'.json';
+  a.download='three_phase_config_'+safeName+'_'+new Date().toISOString().slice(0,10)+'.json';
   a.click();
   URL.revokeObjectURL(url);
   showConfigStatus('Configuration saved: '+a.download, false);
@@ -1068,8 +1069,8 @@ function openConfigFile(evt){
   reader.onload=function(e){
     try{
       var cfg=JSON.parse(e.target.result);
-      if(cfg._format!=='gridworks-embr-config' && cfg._format!=='gridworks-amber-config' && cfg._format!=='gridworks-ampacity-config'){
-        alert('This file does not appear to be a Gridworks EMBR configuration.');
+      if(cfg._format!=='the-three-phase-ampacity-config' && cfg._format!=='gridworks-embr-config' && cfg._format!=='gridworks-amber-config' && cfg._format!=='gridworks-ampacity-config'){
+        alert('This file does not appear to be a configuration from The Three Phase Ampacity Calculator.');
         return;
       }
       applyConfig(cfg);

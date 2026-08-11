@@ -216,6 +216,10 @@ def _get_status(path):
         return e.code
 check("GET / serves the app (200)", _get_status("/") == 200)
 check("GET /embr.html serves the app (200)", _get_status("/embr.html") == 200)
+check("GET /three_phase_logo.png serves the new logo (200)",
+      _get_status("/three_phase_logo.png") == 200)
+check("GET /gridworks_logo.png blocks the retired logo (404)",
+      _get_status("/gridworks_logo.png") == 404)
 st, h = _headers("GET", "healthz", api=False)
 check("GET /healthz returns 200 JSON for deployment health checks",
       st == 200 and h.get_content_type() == "application/json",
@@ -237,7 +241,7 @@ _httpd.shutdown()
 
 # ---------------- report ----------------
 print("=" * 74)
-print("EMBR input-validation regression tests")
+print("The Three Phase Ampacity Calculator input-validation regression tests")
 print("=" * 74)
 npass = 0
 for name, ok, detail in RESULTS:

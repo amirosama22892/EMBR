@@ -1,11 +1,11 @@
-# Deploying EMBR on Render
+# Deploying The Three Phase Ampacity Calculator on Render
 
-EMBR deploys as one Python web service. The Python process serves both the API and the static frontend, so the app does not need a separate frontend service, database, persistent disk, or secret.
+The Ampacity Calculator deploys as one Python web service. The Python process serves both the API and the static frontend, so the app does not need a separate frontend service, database, persistent disk, or secret.
 
 ## Before deploying
 
 1. Push this repository, including `render.yaml`, to GitHub, GitLab, or Bitbucket.
-2. Confirm the repository root contains `embr-server.py` and `render.yaml`. If EMBR is inside a larger monorepo, set the Blueprint service's `rootDir` to the EMBR folder.
+2. Confirm the repository root contains `embr-server.py` and `render.yaml`. If the app is inside a larger monorepo, set the Blueprint service's `rootDir` to this folder.
 3. Confirm the GitHub Actions **Test** workflow passes. It runs the backend input suite, both engineering verification scripts, and the frontend integration suite.
 
 ## Blueprint deployment (recommended)
@@ -40,7 +40,7 @@ If you do not use the Blueprint, create a Python web service with these settings
 | Health check path | `/healthz` |
 | Python version | `3.12` (or a tested newer version) |
 
-Do not set `PORT`; Render supplies it. EMBR has no required environment variables.
+Do not set `PORT`; Render supplies it. The Ampacity Calculator has no required environment variables.
 
 ## Optional environment variables
 
@@ -68,7 +68,7 @@ Then verify in a browser:
 
 ## Security and access
 
-A Render web service is public unless you add access controls. EMBR has no user accounts or authentication. If calculations or validation documents must remain private, put the service behind an approved identity-aware proxy or use Render access controls available to your plan before sharing the URL.
+A Render web service is public unless you add access controls. The Ampacity Calculator has no user accounts or authentication. If calculations or validation documents must remain private, put the service behind an approved identity-aware proxy or use Render access controls available to your plan before sharing the URL.
 
 ## Troubleshooting
 

@@ -1,5 +1,5 @@
 /*
- * Frontend integration tests for EMBR (embr.html).
+ * Frontend integration tests for The Three Phase Ampacity Calculator.
  *
  * Runs the real inline script inside jsdom and drives it the way a user would,
  * asserting on user-visible behavior (Testing Trophy — integration over unit).
@@ -71,6 +71,12 @@ window.addEventListener("load", async () => {
     await wait(250); // let the debounced load-time calculate() settle
     check("page loads and initializes without a JS error", jsErrors.length === 0, jsErrors.join(" | "));
     check("core elements exist (rAmp, detailGrid, mod-home)", !!($("rAmp") && $("detailGrid") && $("mod-home")));
+    check("The Three Phase logo and Ampacity Calculator branding render",
+      window.document.querySelector('.logo-img')?.getAttribute('src') === '/three_phase_logo.png' &&
+      window.document.querySelector('.header-title')?.textContent === 'Ampacity Calculator' &&
+      !window.document.body.textContent.includes('Gridworks'));
+    check("new configuration exports use The Three Phase format",
+      window.gatherCurrentConfig()._format === 'the-three-phase-ampacity-config');
 
     // ---- T2: module navigation ----
     window.showModule("about");
@@ -259,7 +265,7 @@ window.addEventListener("load", async () => {
 
   // ---- report ----
   console.log("=".repeat(74));
-  console.log("EMBR frontend integration tests");
+  console.log("The Three Phase Ampacity Calculator frontend integration tests");
   console.log("=".repeat(74));
   let n = 0;
   for (const [name, ok, detail] of results) {
